@@ -13,3 +13,8 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+
+# nix build tooling
+shell.nix
+.envrc
