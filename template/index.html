@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-{{template "head" "Dashboard"}}
+{{template "head.html" "Dashboard"}}
 <body class="subpixel-antialiased">
 	<div class="min-h-screen flex flex-row">
 		<div class="flex flex-col w-80 bg-white z-50 shadow-lg">
@@ -8,11 +8,11 @@
 				<h1 class="text-3xl font-mono font-medium lowercase text-purple-700">Gallipot</h1>
 			</div>
 			<!--Sidebar content-->
-			{{template "sidebar" .}}
+			{{template "sidebar.html" .}}
 		</div>
 		<div class="flex w-full bg-gray-100">
 			<!-- Page content-->
-		    {{template /*(slice .request.URL.EscapedPath() 1)*/ "login" .}}
+		    {{template "login.html" .}}
 		</div>
 	</div>
 </body>
