@@ -12,7 +12,7 @@
 		</div>
 		<div class="flex w-full bg-gray-100">
 			<!-- Page content-->
-		    {{template (slice .request.URL.EscapedPath() 1) .}}
+		    {{template /*(slice .request.URL.EscapedPath() 1)*/ "login" .}}
 		</div>
 	</div>
 </body>
