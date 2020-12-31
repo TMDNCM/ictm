@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-{{template "head.html" "Dashboard"}}
+{{- include "head.html" (title .Page) -}}
 <body class="subpixel-antialiased">
 	<div class="min-h-screen flex flex-row">
 		<div class="flex flex-col w-80 bg-white z-50 shadow-lg">
@@ -8,11 +8,11 @@
 				<h1 class="text-3xl font-mono font-medium lowercase text-purple-700">Gallipot</h1>
 			</div>
 			<!--Sidebar content-->
-			{{- template "sidebar.html" . -}}
+			{{- include "sidebar.html" . -}}
 		</div>
 		<div class="flex w-full bg-gray-100">
 			<!-- Page content-->
-			{{- template ($page | printf "%s.html") . -}}
+			{{- include (print .Page ".html") . -}}
 		</div>
 	</div>
 </body>
