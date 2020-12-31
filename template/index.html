@@ -1,28 +1,3 @@
-{{- /* Process request path */ -}}
-{{- $pathStr := "/login" -}}
-{{- /* TODO: use "$pathStr := .Request.URL.EscapedPath" once .Request is implemented */ -}}
-{{- $path := slice (.Split $pathStr "/") 1 -}}
-{{- $page := index $path 0 -}}
-
-{{- /* If $page is empty, we are at "/" - default to an index page */ -}}
-{{- if len $page | eq 0 -}}
-	{{- $page = "about" -}}
-{{- end -}}
-
-{{- /* Accessible pages (public, private, combined) */ -}}
-{{- $pagesPublic := ["about", "signup", "login"] -}}
-{{- $pagesPrivate := ["dashboard"] -}}
-{{- $pagesAll := .Combine $pagesPublic $pagesPrivate -}}
-
-{{- /* When the requested page is not present in (Public|Private), 404 or something */ -}}
-{{- if not (.Contains $pagesAll $page) -}}
-	{{- /* TODO: redirect to 404 */ -}}
-{{- end -}}
-
-{{- /* When the requested page is private, require login - else redirect to login (with error?) */ -}}
-{{- if and (not .LoggedIn) (.Contains $pagesPrivate $page) -}}
-	{{- /* TODO: redirect to login */ -}}
-{{- end -}}
 <!doctype html>
 <html>
 {{template "head.html" "Dashboard"}}
