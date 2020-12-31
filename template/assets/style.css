@@ -146,17 +146,14 @@ body > div {
 	margin-left: .5rem;
 }
 /* Forgot Password? */
-#login > #login-forgot {
-	display: none;
-}
-#login > button {
+#login > button, #login > a {
 	margin-left: auto;
 	margin-bottom: .25rem;
 	font-size: .75rem;
 	font-weight: 700;
 	color: rgba(var(--primary),.5);
 }
-#login > button:hover, #login > button:focus {
+#login > button:hover, #login > button:focus, #login > a:hover {
 	text-decoration: underline;
 }
 #login > button:focus {
@@ -167,7 +164,7 @@ body > div {
 	opacity: 1;
 }
 #login > div {
-	visibility: hidden;
+	visibility: visible;
 	opacity: 0;
 	transition: visibility 250ms ease-in-out, opacity 250ms ease-in-out;
 	position: absolute;
@@ -175,7 +172,7 @@ body > div {
 	padding: 1rem;
 	width: 50%;
 	height: 20%;
-	transform: translateY(185%) translateX(-14%);
+	transform: translateY(11.5rem) translateX(-5rem);
 	background: white;
 	box-shadow: var(--shadow);
 	border-radius: .5rem;
@@ -189,7 +186,7 @@ body > div {
 	border: 2px solid rgb(var(--primary));
 	width: 10vw;
 	height: 10vw;
-	transform: translateX(17.5rem) translateY(-4.3rem) rotate(45deg) skew(-20deg, -20deg);
+	transform: translateX(17.5rem) translateY(-3.9rem) rotate(45deg) skew(-20deg, -20deg);
 	z-index: -2;
 }
 #login > div::after {
@@ -204,6 +201,9 @@ body > div {
 }
 #login > div > * {
 	position: absolute;
+	background: white;
+	width: 80%;
+	height: 80%;
 	color: rgb(var(--secondary));
 }
 /* Submit button */
