@@ -1,4 +1,4 @@
-<ul class="flex flex-col h-full">
+<ul class="flex flex-col h-full border-gray-100 border-t-4 border-dashed">
 	{{if .LoggedIn}}
 	<li>
 		<a href="/" class="flex flex-row items-center h-12 text-green-800 hover:text-green-900 hover:bg-gray-50">
@@ -47,22 +47,22 @@
 		</a>
 	</li>
 	{{end}}
-	<div class="h-full"></div>
+	<div class="h-full border-b-4 border-dashed border-gray-100"></div>
 	{{if .LoggedIn}}
-	<li class="border-t-4 border-dashed border-gray-50">
+	<li>
 		<a href="/logout" class="flex flex-row items-center h-12 text-green-800 hover:text-green-900 hover:bg-gray-50">
 			<span class="inline-flex items-center justify-center h-12 w-12 text-lg"><i class="bx bx-log-out"></i></span>
 			<span class="text-sm font-semibold">Logout</span>
 		</a>
 	</li>
 	{{else}}
-	<li class="border-t-4 border-dashed border-gray-50">
+	<li>
 		<a href="/signup" class="flex flex-row items-center h-12 text-green-800 hover:text-green-900 hover:bg-gray-50">
 			<span class="inline-flex items-center justify-center h-12 w-12 text-lg"><i class="bx bx-user-plus"></i></span>
 			<span class="text-sm font-semibold">Sign up</span>
 		</a>
 	</li>
-	<li class="border-t-4 border-dashed border-gray-50">
+	<li>
 		<a href="/login" class="flex flex-row items-center h-12 text-green-800 hover:text-green-900 hover:bg-gray-50">
 			<span class="inline-flex items-center justify-center h-12 w-12 text-lg"><i class="bx bx-log-in"></i></span>
 			<span class="text-sm font-semibold">Login</span>
