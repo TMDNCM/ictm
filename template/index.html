@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+{{template "head" "Dashboard"}}
+<body class="subpixel-antialiased">
+	<div class="min-h-screen flex flex-row">
+		<div class="flex flex-col w-80 bg-white z-50 shadow-lg">
+			<div class="flex items-center justify-center h-20 border-gray-100 border-b-4 border-dashed">
+				<h1 class="text-3xl font-mono font-medium lowercase text-purple-700">Gallipot</h1>
+			</div>
+			<!--Sidebar content-->
+			{{template "sidebar" .}}
+		</div>
+		<div class="flex w-full bg-gray-100">
+			<!-- Page content-->
+		    {{template (slice .request.URL.EscapedPath() 1) .}}
+		</div>
+	</div>
+</body>
+</html>
