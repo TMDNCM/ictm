@@ -2,6 +2,11 @@ package data
 
 
 type User struct{
-	Name string
+	Username string
+	Displayname string
 	Email string
 }
+
+
+
+
