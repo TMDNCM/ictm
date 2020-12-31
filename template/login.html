@@ -1,21 +1,15 @@
 <form method="post" id="login">
 	<span>
 		<label for="login-username">Username</label>
-		<input id="login-username" name="username" class="field text-sm text-green-700 p-2 px-3 rounded-r w-full font-mono focus:outline-none placeholder-green-400" type="text" placeholder="someonespecial">
+		<input id="login-username" name="username" type="text" placeholder="someonespecial">
 	</span>
 	<span>
 		<label for="login-password">Password</label>
-		<input id="login-password" name="password" class="field text-sm text-green-700 p-2 px-3 rounded-r w-full font-mono focus:outline-none placeholder-green-400" type="password" placeholder="*******">
+		<input id="login-password" name="password" type="password" placeholder="*******">
 	</span>
-	<input type="checkbox" id="login-forgot">
-	<label for="login-forgot">
-		<span>Forgot Password?</span>
-		<div>
-			<div></div>
-			<div class="relative">
-				Tough luck
-			</div>
-		</div>
-	</label>
-	<input type="submit" value="Login" class="border-2 border-purple-700 hover:bg-purple-700 hover:text-gray-100 mt-3 text-purple-700 block text-center p-3 px-4 text-sm rounded cursor-pointer font-black">
+	<button type="button">Forgot Password?</button>
+	<div>
+		<span>Tough luck, better save it next time.</span>
+	</div>
+	<input type="submit" value="Login">
 </div>

@@ -1,16 +1,22 @@
 :root {
-	--primary: rgb(109,40,217);
-	--secondary: rgb(6,95,70);
+	--primary: 109,40,217;
+	--secondary: 6,95,70;
 
-	--color-gray-50: rgb(249,250,251);
-	--color-gray-100: rgb(243,244,246);
-	--color-red-100: rgb(254,226,226);
-	--color-red-500: rgb(239,68,68);
-	--color-green-700: rgb(4,120,87);
+	--color-gray-50: 249,250,251;
+	--color-gray-100: 243,244,246;
+	--color-red-100: 254,226,226;
+	--color-red-500: 239,68,68;
+	--color-green-700: 4,120,87;
 
 	--font-mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-	--shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+	--shadow: 0 15px 12px -3px rgba(0,0,0,.1);
 }
+
+/* generic fucks */
+*:focus, *:active {
+	outline: none !important;
+}
+/**/
 
 body {
 	display: flex;
@@ -37,7 +43,7 @@ body > nav > div {
 /* Sidebar header text */
 h1 {
 	text-transform: lowercase;
-	color: var(--primary);
+	color: rgb(var(--primary));
 	font-size: 2rem;
 	font-family: var(--font-mono);
 }
@@ -48,7 +54,7 @@ body > nav > ul {
 	height: 100%;
 	border-top-width: 4px;
 	border-style: dashed;
-	border-color: var(--color-gray-100);
+	border-color: rgb(var(--color-gray-100));
 }
 /* Sidebar entry */
 nav > ul > li > a {
@@ -56,10 +62,10 @@ nav > ul > li > a {
 	flex-direction: row;
 	align-items: center;
 	height: 3rem;
-	color: var(--secondary);
+	color: rgb(var(--secondary));
 }
 nav > ul > li > a:hover {
-	background: var(--color-gray-50);
+	background: rgb(var(--color-gray-50));
 }
 /* Sidebar entry icon */
 nav > ul > li > a > i, i::before {
@@ -76,8 +82,8 @@ nav > ul > li > a > span:nth-of-type(1) {
 }
 /* Sidebar entry notification */
 nav > ul > li > a > span:nth-of-type(2) {
-	background: var(--color-red-100);
-	color: var(--color-red-500);
+	background: rgb(var(--color-red-100));
+	color: rgb(var(--color-red-500));
 	padding-left: .75rem;
 	padding-right: .75rem;
 	margin-left: auto;
@@ -90,14 +96,14 @@ nav > ul > div {
 	height: 100%;
 	border-bottom-width: 4px;
 	border-style: dashed;
-	border-color: var(--color-gray-100);
+	border-color: rgb(var(--color-gray-100));
 }
 
 /* Content */
 body > div {
 	display: flex;
 	width: 100%;
-	background: var(--color-gray-100);
+	background: rgb(var(--color-gray-100));
 }
 /* Login box */
 #login {
@@ -111,7 +117,7 @@ body > div {
 	align-self: center;
 	border-width: 2px;
 	border-radius: .25rem;
-	border-color: var(--primary);
+	border-color: rgb(var(--primary));
 }
 /* Input groups */
 #login > span {
@@ -119,71 +125,101 @@ body > div {
 	box-shadow: var(--shadow);
 	margin-bottom: 1.25rem;
 	font-size: .85rem;
+	border: 1px solid rgb(var(--color-gray-100));
+	border-radius: .25rem;
+	overflow: hidden;
 }
 #login > span > label {
 	width: 10rem;
-	color: var(--color-gray-100);
-	background: var(--primary);
+	color: rgb(var(--color-gray-100));
+	background: rgb(var(--primary));
 	text-align: center;
 	padding: .75rem;
 	font-weight: 900;
-	border-top-left-radius: .25rem;
-	border-bottom-left-radius: .25rem;
 	user-select: none;
 }
 #login > span > input {
 	width: 100%;
-	color: var(--color-green-700);
+	color: rgb(var(--color-green-700));
+	font-family: var(--font-mono);
+	padding: .5rem;
+	margin-left: .5rem;
 }
 /* Forgot Password? */
 #login > #login-forgot {
 	display: none;
 }
-#login > label {
-	user-select: none;
+#login > button {
 	margin-left: auto;
 	margin-bottom: .25rem;
-}
-#login > label > span {
 	font-size: .75rem;
 	font-weight: 700;
-	color: var(--color-green-700);
+	color: rgba(var(--primary),.5);
 }
-#login > label:hover > span {
+#login > button:hover, #login > button:focus {
 	text-decoration: underline;
-	cursor: pointer;
 }
-#login > input:checked + label > div {
-	display: revert;
+#login > button:focus {
+	color: rgb(var(--primary));
 }
-#login > label > div {
-	display: none;
+#login > button:focus + div {
+	visibility: visible;
+	opacity: 1;
+}
+#login > div {
+	visibility: hidden;
+	opacity: 0;
+	transition: visibility 250ms ease-in-out, opacity 250ms ease-in-out;
 	position: absolute;
 	margin-top: .5rem;
-}
-#login > label > div > div:nth-of-type(1) {
-	position: absolute;
+	padding: 1rem;
+	width: 50%;
+	height: 20%;
+	transform: translateY(185%) translateX(-14%);
 	background: white;
-	width: 1rem;
-	height: 1rem;
-	transform: translateX(1.25rem) translateY(-.5rem) rotate(45deg);
-	box-shadow: var(--shadow);
-	border: 2px solid var(--primary);
-}
-#login > label > div > div:nth-of-type(2) {
-	background: white;
-	padding: .5rem;
 	box-shadow: var(--shadow);
 	border-radius: .5rem;
-	border: 2px solid var(--primary);
+	border: 2px solid rgb(var(--primary));
+}
+#login > div::before {
+	position: absolute;
+	content: ".";
+	color: white;
+	background: white;
+	border: 2px solid rgb(var(--primary));
+	width: 10vw;
+	height: 10vw;
+	transform: translateX(17.5rem) translateY(-4.3rem) rotate(45deg) skew(-20deg, -20deg);
+	z-index: -2;
+}
+#login > div::after {
+	position: absolute;
+	content: ".";
+	color: white;
+	background: white;
+	width: 20vw;
+	height: 5vw;
+	transform: translateX(14.5rem) translateY(-1rem);
+	z-index: -1;
+}
+#login > div > * {
+	position: absolute;
+	color: rgb(var(--secondary));
 }
 /* Submit button */
 #login > input[type=submit] {
 	display: revert;
 	margin: 0;
 	background: white;
+	color: rgb(var(--primary));
+	padding: .75rem;
+	font-weight: 900;
+	border-radius: .25rem;
+	border-width: 2px;
+	border-color: rgb(var(--primary));
 }
 #login > input[type=submit]:hover {
-	color: var(--color-gray-100);
-	background: var(--primary);
+	color: rgb(var(--color-gray-100));
+	background: rgb(var(--primary));
+	cursor: pointer;
 }
