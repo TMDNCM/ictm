@@ -1,19 +1,17 @@
 <!doctype html>
 <html>
 {{- include "head.html" (title .Page) -}}
-<body class="subpixel-antialiased">
-	<div class="min-h-screen flex flex-row">
-		<div class="flex flex-col w-80 bg-white z-50 shadow-lg">
-			<div class="flex items-center justify-center h-20">
-				<h1 class="text-3xl font-mono font-medium lowercase text-purple-700">Gallipot</h1>
-			</div>
-			<!--Sidebar content-->
-			{{- include "sidebar.html" . -}}
+<body>
+	<nav>
+		<div>
+			<h1>Gallipot</h1>
 		</div>
-		<div class="flex w-full bg-gray-100">
-			<!-- Page content-->
-			{{- include (print .Page ".html") . -}}
-		</div>
+		<!--Sidebar content-->
+		{{- include "sidebar.html" . -}}
+	</nav>
+	<div>
+		<!-- Page content-->
+		{{- include (print .Page ".html") . -}}
 	</div>
 </body>
 </html>
