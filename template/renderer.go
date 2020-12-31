@@ -5,6 +5,8 @@ import (
 	"github.com/Fliegermarzipan/gallipot/data"
 	"html/template"
 	"strings"
+	"log"
+	"path"
 )
 
 type FrontendData struct {
@@ -17,6 +19,15 @@ type FrontendData struct {
 var (
 	indexTemplate *template.Template
 )
+
+func templateFromFile(funcMap template.FuncMap, s string, d interface{}) string {
+		var buf strings.Builder
+		err := template.Must(template.New(path.Base(s)).Funcs(funcMap).ParseFiles(s)).Execute(&buf, d)
+		if err != nil {
+			log.Print(err)
+		}
+		return buf.String()
+}
 
 func LoadTemplates() {
 	funcMap := template.FuncMap{
@@ -44,9 +55,10 @@ func LoadTemplates() {
 		},
 	}
 	funcMap["include"] = func(s string, d interface{}) template.HTML {
-		var buf strings.Builder
-		template.Must(template.New(s).Funcs(funcMap).ParseFiles(s)).Execute(&buf, d)
-		return template.HTML(buf.String())
+		return template.HTML(templateFromFile(funcMap, s, d))
+	}
+	funcMap["includeCSS"] = func(s string, d interface{}) template.CSS {
+		return template.CSS(templateFromFile(funcMap, s, d))
 	}
 
 	//indexTemplate = template.Must(template.ParseFiles("index.html", "sidebar.html",
