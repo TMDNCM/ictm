@@ -33,11 +33,11 @@
 				<h1 class="text-3xl font-mono font-medium lowercase text-purple-700">Gallipot</h1>
 			</div>
 			<!--Sidebar content-->
-			{{template "sidebar.html" .}}
+			{{- template "sidebar.html" . -}}
 		</div>
 		<div class="flex w-full bg-gray-100">
 			<!-- Page content-->
-			{{template "login.html" .}}
+			{{- template ($page | printf "%s.html") . -}}
 		</div>
 	</div>
 </body>
