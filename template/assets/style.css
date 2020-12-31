@@ -1,0 +1,189 @@
+:root {
+	--primary: rgb(109,40,217);
+	--secondary: rgb(6,95,70);
+
+	--color-gray-50: rgb(249,250,251);
+	--color-gray-100: rgb(243,244,246);
+	--color-red-100: rgb(254,226,226);
+	--color-red-500: rgb(239,68,68);
+	--color-green-700: rgb(4,120,87);
+
+	--font-mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+	--shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+}
+
+body {
+	display: flex;
+	flex-direction: row;
+	min-height: 100vh;
+}
+
+/* Sidebar */
+body > nav {
+	display: flex;
+	flex-direction: column;
+	width: 20rem;
+	background: white;
+	z-index: 50; /* for the box shadow */
+	box-shadow: var(--shadow);
+}
+/* Sidebar header */
+body > nav > div {
+	display:flex;
+	height: 5rem;
+	justify-content: center;
+	align-items: center;
+}
+/* Sidebar header text */
+h1 {
+	text-transform: lowercase;
+	color: var(--primary);
+	font-size: 2rem;
+	font-family: var(--font-mono);
+}
+/* Sidebar list */
+body > nav > ul {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	border-top-width: 4px;
+	border-style: dashed;
+	border-color: var(--color-gray-100);
+}
+/* Sidebar entry */
+nav > ul > li > a {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 3rem;
+	color: var(--secondary);
+}
+nav > ul > li > a:hover {
+	background: var(--color-gray-50);
+}
+/* Sidebar entry icon */
+nav > ul > li > a > i, i::before {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 3rem;
+	height: 3rem;
+	font-size: 1.25rem;
+}
+/* Sidebar entry text */
+nav > ul > li > a > span:nth-of-type(1) {
+	font-size: .85rem;
+}
+/* Sidebar entry notification */
+nav > ul > li > a > span:nth-of-type(2) {
+	background: var(--color-red-100);
+	color: var(--color-red-500);
+	padding-left: .75rem;
+	padding-right: .75rem;
+	margin-left: auto;
+	margin-right: 1.5rem;
+	font-size: .85rem;
+	border-radius: 9999px;
+}
+/* Sidebar shove spacer */
+nav > ul > div {
+	height: 100%;
+	border-bottom-width: 4px;
+	border-style: dashed;
+	border-color: var(--color-gray-100);
+}
+
+/* Content */
+body > div {
+	display: flex;
+	width: 100%;
+	background: var(--color-gray-100);
+}
+/* Login box */
+#login {
+	display: flex;
+	flex-direction: column;
+	background: white;
+	box-shadow: var(--shadow);
+	padding: 2.5rem;
+	margin-left: auto;
+	margin-right: auto;
+	align-self: center;
+	border-width: 2px;
+	border-radius: .25rem;
+	border-color: var(--primary);
+}
+/* Input groups */
+#login > span {
+	display: flex;
+	box-shadow: var(--shadow);
+	margin-bottom: 1.25rem;
+	font-size: .85rem;
+}
+#login > span > label {
+	width: 10rem;
+	color: var(--color-gray-100);
+	background: var(--primary);
+	text-align: center;
+	padding: .75rem;
+	font-weight: 900;
+	border-top-left-radius: .25rem;
+	border-bottom-left-radius: .25rem;
+	user-select: none;
+}
+#login > span > input {
+	width: 100%;
+	color: var(--color-green-700);
+}
+/* Forgot Password? */
+#login > #login-forgot {
+	display: none;
+}
+#login > label {
+	user-select: none;
+	margin-left: auto;
+	margin-bottom: .25rem;
+}
+#login > label > span {
+	font-size: .75rem;
+	font-weight: 700;
+	color: var(--color-green-700);
+}
+#login > label:hover > span {
+	text-decoration: underline;
+	cursor: pointer;
+}
+#login > input:checked + label > div {
+	display: revert;
+}
+#login > label > div {
+	display: none;
+	position: absolute;
+	margin-top: .5rem;
+}
+#login > label > div > div:nth-of-type(1) {
+	position: absolute;
+	background: white;
+	width: 1rem;
+	height: 1rem;
+	transform: translateX(1.25rem) translateY(-.5rem) rotate(45deg);
+	box-shadow: var(--shadow);
+	border: 2px solid var(--primary);
+}
+#login > label > div > div:nth-of-type(2) {
+	background: white;
+	padding: .5rem;
+	box-shadow: var(--shadow);
+	border-radius: .5rem;
+	border: 2px solid var(--primary);
+}
+/* Submit button */
+#login > input[type=submit] {
+	display: revert;
+	margin: 0;
+	background: white;
+}
+#login > input[type=submit]:hover {
+	color: var(--color-gray-100);
+	background: var(--primary);
+}
