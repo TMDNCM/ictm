@@ -4,7 +4,11 @@
 	<link href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet"/>
 	<link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
 	<style>
-		{{- includeCSS "assets/style.css" . -}}
+		{{- include "assets/style.css" . -}}
+		{{- $style := lower .Page | printf "assets/%s.css" -}}
+		{{- if exists $style -}}
+			{{- include $style . -}}
+		{{- end -}}
 	</style>
-	<title>Gallipot - {{.}}</title>
+	<title>Gallipot - {{lower .Page | title}}</title>
 </head>
