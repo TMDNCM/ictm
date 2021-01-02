@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/Fliegermarzipan/gallipot/template"
-	"os"
 	"log"
+	"net/http"
 	"strings"
 )
 
@@ -17,32 +17,36 @@ func contains(s []string, e string) bool {
 }
 
 func main() {
-	reqPath := "/login"
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		reqPath := r.URL.Path
 
-	fd := new(template.FrontendData)
-	fd.LoggedIn = false
-	tp := template.GetTemplates()
+		fd := new(template.FrontendData)
+		fd.LoggedIn = false
+		tp := template.GetTemplates()
 
-	path := strings.Split(reqPath, "/")[1:]
-	page := path[0]
-	if len(page) == 0 {
-		page = "about"
-	}
+		path := strings.Split(reqPath, "/")[1:]
+		page := path[0]
+		if len(page) == 0 {
+			page = "about"
+		}
 
-	pagesPublic := []string{"about", "signup", "login"}
-	pagesPrivate := []string{"dashboard"}
-	pagesAll := append(append([]string{}, pagesPublic...), pagesPrivate...)
+		pagesPublic := []string{"about", "signup", "login"}
+		pagesPrivate := []string{"dashboard", "profile"}
+		pagesAll := append(append([]string{}, pagesPublic...), pagesPrivate...)
 
-	if !contains(pagesAll, page) {
-		// TODO: redirect to 404
-	}
+		if !contains(pagesAll, page) {
+			// TODO: redirect to 404
+			return
+		}
 
-	if !fd.LoggedIn && contains(pagesPrivate, page) {
-		// TODO: redirect to login
-	}
+		if !fd.LoggedIn && contains(pagesPrivate, page) {
+			// TODO: redirect to login
+		}
 
-	fd.Page = page
-	log.Println(fd.Page)
+		fd.Page = page
+		log.Println(fd.Page)
 
-	tp.Execute(os.Stdout, fd)
+		tp.Execute(w, fd)
+	})
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
