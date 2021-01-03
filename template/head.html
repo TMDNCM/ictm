@@ -4,10 +4,12 @@
 	<link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
 	<style>
 		{{- include "assets/style.css" . -}}
-		{{- $style := lower .Page | printf "assets/%s.css" -}}
-		{{- if exists $style -}}
-			{{- include $style . -}}
-		{{- end -}}
 	</style>
+	{{- $style := lower .Page | printf "assets/%s.css" -}}
+	{{- if exists $style -}}
+		<style>
+			{{- include $style . -}}
+		</style>
+	{{- end -}}
 	<title>Gallipot - {{lower .Page | title}}</title>
 </head>
