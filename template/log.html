@@ -1,0 +1,26 @@
+<div>
+	{{- /* TODO: range $entry := getLog */ -}}
+		<h2><i class="bx bx-plus-medical"></i>&nbsp;<b><a href="/user/{{- /* $entry.User.Username */ -}}">Bob{{- /* $entry.User.Displayname */ -}}</a></b></h2>
+		<div>
+			<p>100ml <i><b>Skim Milk</b></i>{{- /* printf "%smg $s" $entry.Amount $entry.Substance.Name */ -}}</p>
+			<p title="2021-01-03 14:50 CET{{- /* $entry.Created */ -}}">3 minutes ago {{/* prettyTime $entry.Created */}} via {{/* $entry.Route.Name */}} oral consumption</p>
+		</div>
+		<hr>
+		<h2><i class="bx bx-plus-medical"></i>&nbsp;<b><a href="/user/{{- /* $entry.User.Username */ -}}">Bob{{- /* $entry.User.Displayname */ -}}</a></b></h2>
+		<div>
+			<p>100ml <i><b>Skim Milk</b></i>{{- /* printf "%smg $s" $entry.Amount $entry.Substance.Name */ -}}</p>
+			<p title="2021-01-03 14:50 CET{{- /* $entry.Created */ -}}">3 minutes ago {{/* prettyTime $entry.Created */}} via {{/* $entry.Route.Name */}} oral consumption</p>
+		</div>
+		<hr>
+		<h2><i class="bx bx-plus-medical"></i>&nbsp;<b><a href="/user/{{- /* $entry.User.Username */ -}}">Bob{{- /* $entry.User.Displayname */ -}}</a></b></h2>
+		<div>
+			<p>100ml <i><b>Skim Milk</b></i>{{- /* printf "%smg $s" $entry.Amount $entry.Substance.Name */ -}}</p>
+			<p title="2021-01-03 14:50 CET{{- /* $entry.Created */ -}}">3 minutes ago {{/* prettyTime $entry.Created */}} via {{/* $entry.Route.Name */}} oral consumption</p>
+		</div>
+		<hr>
+	{{- /* else */ -}}
+		<!--
+			<span>Bit empty here...</span>
+		-->
+	{{- /* end */ -}}
+</div>
