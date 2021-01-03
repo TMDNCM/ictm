@@ -97,7 +97,7 @@ func LoadTemplates() {
 
 			return []*data.User{friend1, friend2, friend3}
 		},
-		"getLog": func() []*data.LogEntry {
+		"getLog": func(maxResults int) []*data.LogEntry {
 			return []*data.LogEntry{}
 		},
 		"getNotificationCount": func() int {
