@@ -3,7 +3,7 @@
 	<section>
 		<h2>
 			<i class="bx bx-rename"></i>
-			Account
+			Account details
 		</h2>
 		<div>
 			<h1>{{.User.Displayname}}</h1>
@@ -44,11 +44,11 @@
 				</span>
 				<span>
 					<label for="password-new">New Password</label>
-					<input id="password-new" name="password-new" type="password" placeholder="*******">
+					<input id="password-new" name="password-new" type="password" placeholder="*************************">
 				</span>
 				<span>
 					<label for="password-new-again">New Password, again</label>
-					<input id="password-new-again" name="password-new-again" type="password" placeholder="*******">
+					<input id="password-new-again" name="password-new-again" type="password" placeholder="*************************">
 				</span>
 			</fieldset>
 			<span class="button">
@@ -65,11 +65,14 @@
 			Danger zone
 		</h2>
 		<form method="post">
+			<input type="hidden" value="delete-account">
 			<span class="button danger">
 				<label for="delete-account">
 					<i class="bx bx-trash"></i>
 				</label>
-				<input id="delete-account" type="submit" value="Delete account">
+				<input id="delete-account-safety" type="checkbox">
+				<label for="delete-account-safety">Delete account</label>
+				<input id="delete-account" type="submit" value="You sure?">
 			</span>
 		</form>
 	</section>

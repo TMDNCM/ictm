@@ -321,9 +321,9 @@ form span.button.danger:hover > label {
 form span.button.danger > input[type=submit] {
 	color: rgb(var(--color-red-500));
 }
-form span.button.danger > input[type=submit]:hover, form span.button.danger:hover > input[type=submit] {
+form span.button.danger > input[type=submit]:hover, form span.button.danger:hover > input[type=submit], form span.button.danger > input[type=checkbox] + label:hover {
 	color: rgb(var(--color-gray-100));
-	background: rgb(var(--color-red-500));
+	background: rgb(var(--color-red-500)) !important;
 	cursor: pointer;
 }
 form span > input[type=submit] {
@@ -335,4 +335,21 @@ form span.button:hover > input[type=submit], form input[type=submit]:hover {
 	color: rgb(var(--color-gray-100));
 	background: rgb(var(--primary));
 	cursor: pointer;
+}
+form span > input[type=checkbox] {
+	display: none;
+}
+form span > input[type=checkbox] ~ input[type=submit] {
+	display: none;
+}
+form span > input[type=checkbox] + label {
+	width: 100%;
+	color: rgb(var(--color-red-500));
+	background: white !important;
+}
+form span > input[type=checkbox]:checked + label {
+	display: none;
+}
+form span > input[type=checkbox]:checked ~ input[type=submit] {
+	display: revert;
 }
