@@ -2,14 +2,16 @@ package template
 
 import (
 	//"net/http"
+	"fmt"
 	"github.com/Fliegermarzipan/gallipot/data"
+	"github.com/dustin/go-humanize"
 	"html/template"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
-	"fmt"
+	"time"
 )
 
 type UserAlert struct {
@@ -70,6 +72,9 @@ func LoadTemplates() {
 			}
 			log.Print("file exists fucked up")
 			return false
+		},
+		"prettyTime": func(t time.Time) string {
+			return humanize.RelTime(t, time.Now(), "ago", "in the future")
 		},
 		"getUser": func(username string) *data.User {
 			// TODO: return data.User of username if exists, else nil
