@@ -23,6 +23,14 @@ var (
 	indexTemplate *template.Template
 )
 
+func getTemplateDir() string{
+	_, caller, _, _ := runtime.Caller(0)
+	caller, err := filepath.EvalSymlinks(caller)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return filepath.Dir(caller)
+}
 func LoadTemplates() {
 	funcMap := template.FuncMap{
 		"split": strings.Split,
@@ -60,7 +68,7 @@ func LoadTemplates() {
 		ext := filepath.Ext(s)
 
 		var buf strings.Builder
-		err := template.Must(template.New(path.Base(s)).Funcs(funcMap).ParseFiles(s)).Execute(&buf, d)
+		err := template.Must(template.New(path.Base(s)).Funcs(funcMap).ParseFiles(filepath.Join(getTemplateDir(),s))).Execute(&buf, d)
 		if err != nil {
 			log.Print(err)
 		}
@@ -74,14 +82,9 @@ func LoadTemplates() {
 		return rendered
 	}
 
-	_, caller, _, _ := runtime.Caller(0)
-	caller, err := filepath.EvalSymlinks(caller)
-	if err != nil {
-		log.Fatal(err)
-	}
-	templateDir := filepath.Dir(caller)
 	indexTemplate = template.Must(template.New("").Funcs(funcMap).
-		ParseGlob(filepath.Join(templateDir, "*.html"))).Lookup("index.html")
+		ParseGlob(filepath.Join(getTemplateDir(), "*.html"))).Lookup("index.html")
+		log.Println(indexTemplate)
 }
 
 func GetTemplates() *template.Template {
