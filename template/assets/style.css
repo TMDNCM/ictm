@@ -317,7 +317,7 @@ form span.button.danger > label {
 }
 form span.button.danger:hover > label {
 	color: rgb(var(--color-red-500));
-	background: rgb(var(--color-gray-100));
+	background: white;
 }
 form span.button.danger > input[type=submit] {
 	color: rgb(var(--color-red-500));
