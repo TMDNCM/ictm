@@ -1,0 +1,38 @@
+<div class="fill">
+	{{- $user := .User -}}
+	{{- if len .Path | lt 1 -}}
+		{{- $nuser := index .Path 1 | getUser -}}
+		{{- if $nuser -}}
+			{{- $user = $nuser -}}
+		{{- else -}}
+			{{- redirect "/user" -}}
+		{{- end -}}
+	{{- end -}}
+	<h1>User {{$user.Username}}</h1>
+	<section>
+		<h2>
+			<i class="bx bxs-user-account"></i>
+			Account details
+		</h2>
+		<div>
+			<h2><b>Name:</b>&nbsp;{{$user.Displayname}}</h2>
+		</div>
+	</section>
+	{{- if eq $user .User | not -}}
+	<section>
+		<h2>
+			<i class="bx bx-user"></i>
+			User actions
+		</h2>
+		<form method="post">
+			<input type="hidden" name="befriend" value="{{.User.Username}}">
+			<span class="button">
+				<label for="befriend">
+					<i class="bx bx-user-plus"></i>
+				</label>
+				<input id="befriend" type="submit" value="Add friend">
+			</span>
+		</form>
+	</section>
+	{{- end -}}
+</div>

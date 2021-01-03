@@ -9,6 +9,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"fmt"
 )
 
 type UserAlert struct {
@@ -68,6 +69,13 @@ func LoadTemplates() {
 			}
 			log.Print("file exists fucked up")
 			return false
+		},
+		"getUser": func(uid string) *data.User {
+			// TODO: return data.User of uid if exists, else nil
+			return nil
+		},
+		"redirect": func(to string) template.HTML {
+			return template.HTML(fmt.Sprintf("<meta http-equiv=refresh content='0; url = %s'", to))
 		},
 	}
 	funcMap["include"] = func(s string, d interface{}) interface{} {

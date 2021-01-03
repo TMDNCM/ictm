@@ -39,7 +39,7 @@ ol, ul {
 }
 a {
 	color: inherit;
-	text-decoration: inherit;
+	text-decoration: underline;
 }
 button {
 	cursor: pointer;
@@ -101,6 +101,9 @@ body > nav {
 	width: 20rem;
 	background: white;
 	margin-right: 4px;
+}
+body > nav a {
+	text-decoration: inherit;
 }
 /* Sidebar header */
 body > nav > div {

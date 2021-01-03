@@ -28,13 +28,13 @@ func NewHandler() *WebHandler {
 		"log":           "private",
 		"friends":       "private",
 		"stock":         "private",
+		"user":          "private",
 	}
 
 	return h
 }
 
 func (h *WebHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	reqPath := r.URL.Path
 	tp := template.GetTemplates()
 
