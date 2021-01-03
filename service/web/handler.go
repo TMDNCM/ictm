@@ -58,6 +58,13 @@ func (h *WebHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// TODO: redirect to login
 	}
 
+	// TODO: remove example alert usage
+	if fd.Page == "login" {
+		fd.Alert = new(template.UserAlert)
+		fd.Alert.Title = "Login incorrect"
+		fd.Alert.Message = "Wrong username or password."
+	}
+
 	log.Println(fd.Page)
 
 	tp.Execute(w, fd)

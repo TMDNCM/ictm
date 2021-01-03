@@ -11,11 +11,17 @@ import (
 	"strings"
 )
 
+type UserAlert struct {
+	Title   string
+	Message string
+}
+
 type FrontendData struct {
 	//Request *http.Request
 	LoggedIn bool
 	Page     string
 	User     *data.User
+	Alert    *UserAlert
 }
 
 var (

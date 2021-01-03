@@ -353,3 +353,40 @@ form span > input[type=checkbox]:checked + label {
 form span > input[type=checkbox]:checked ~ input[type=submit] {
 	display: revert;
 }
+
+dialog {
+	position: fixed;
+	bottom: 0;
+	margin: 1.5rem;
+	padding: 1.5rem;
+	margin-left: auto;
+	border-top-left-radius: .25rem;
+	border-top-right-radius: .25rem;
+	border: 2px solid rgb(var(--color-gray-50));
+	border-bottom: 2px solid rgb(var(--color-red-500));
+	box-shadow: var(--shadow);
+}
+dialog > section {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	margin-bottom: .75rem;
+}
+dialog > section > p {
+	font-family: var(--font-mono);
+	font-weight: 700;
+	color: rgb(var(--color-red-500));
+}
+dialog > section > form {
+	margin-left: auto;
+}
+dialog > section > form > input[type=submit] {
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	border-color: rgb(var(--color-red-500));
+	color: rgb(var(--color-red-500));
+}
+dialog > section > form > input[type=submit]:hover {
+	background: rgb(var(--color-red-500));
+}

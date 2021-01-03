@@ -13,5 +13,8 @@
 		<!-- Page content-->
 		{{- include (print .Page ".html") . -}}
 	</main>
+	{{- if .Alert -}}
+		{{- include "alert.html" . -}}
+	{{- end -}}
 </body>
 </html>
