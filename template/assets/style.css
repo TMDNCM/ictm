@@ -104,7 +104,7 @@ body > nav {
 }
 /* Sidebar header */
 body > nav > div {
-	display:flex;
+	display: flex;
 	justify-content: center;
 	align-items: center;
 }

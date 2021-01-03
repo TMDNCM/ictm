@@ -6,10 +6,27 @@
 			Account
 		</h2>
 		<div>
+			<h1>{{.User.Displayname}}</h1>
 			<form method="post">
 				<span>
 					<label for="username">Username</label>
-					<input id="username" name="username" type="username" placeholder="someonespecial" disabled>
+					<input id="username" name="username" type="text" placeholder="someonespecial" value="{{.User.Username}}" disabled>
+				</span>
+				<fieldset>
+					<span>
+						<label for="displayname">Display name</label>
+						<input id="displayname" name="displayname" type="text" placeholder="Someone Special" value="{{.User.Displayname}}">
+					</span>
+					<span>
+						<label for="email">E-Mail</label>
+						<input id="email" name="email" type="email" placeholder="foo@example.com" value="{{.User.Email}}">
+					</span>
+				</fieldset>
+				<span class="button">
+					<label for="userdata-update">
+						<i class="bx bx-refresh"></i>
+					</label>
+					<input id="userdata-update" type="submit" value="Update">
 				</span>
 			</form>
 		</div>
