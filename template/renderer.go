@@ -46,7 +46,7 @@ func LoadTemplates() {
 		"lower": strings.ToLower,
 		"title": strings.Title,
 		"exists": func(s string) bool {
-			if _, err := os.Stat("/path/to/whatever"); err == nil {
+			if _, err := os.Stat(s); err == nil {
 				return true
 			} else if os.IsNotExist(err) {
 				return false
