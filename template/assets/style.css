@@ -136,7 +136,7 @@ nav > ul > div {
 }
 
 /* Content */
-body > div {
+body > main {
 	display: flex;
 	width: 100%;
 	background: rgb(var(--color-gray-100));
