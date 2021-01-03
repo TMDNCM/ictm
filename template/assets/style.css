@@ -149,8 +149,8 @@ body > main {
 @media only screen and (max-width: 650px) {
 	main > * {
 		border: none;
-		width: 100%;
-		height: 100%;
+		width: 100% !important;
+		height: 100% !important;
 		padding-top: .75rem !important;
 	}
 }
