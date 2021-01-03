@@ -181,16 +181,19 @@ body > div {
 	padding: .5rem;
 	margin-left: .5rem;
 }
-/* Forgot Password? */
-#login > details {
+/* "Forgot Password?" & "Already registered?" */
+#login > details, #login > a{
 	margin-top: .25rem;
 	margin-bottom: -1.35275rem;
 }
-#login > details > summary {
+#login > details > summary, #login > a {
 	text-align: right;
 	font-size: .75rem;
 	font-weight: 700;
 	color: rgba(var(--primary),.5);
+}
+#login > a:hover {
+	text-decoration: underline;
 }
 #login > details[open] > summary {
 	color: rgb(var(--primary));
