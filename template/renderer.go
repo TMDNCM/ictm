@@ -2,14 +2,16 @@ package template
 
 import (
 	//"net/http"
+	"fmt"
 	"github.com/Fliegermarzipan/gallipot/data"
+	"github.com/dustin/go-humanize"
 	"html/template"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
-	"fmt"
+	"time"
 )
 
 type UserAlert struct {
@@ -40,28 +42,30 @@ func getTemplateDir() string {
 func LoadTemplates() {
 	funcMap := template.FuncMap{
 		"split": strings.Split,
-		"contains": func(s []string, e string) bool {
-			for _, a := range s {
-				if a == e {
+		"contains": func(haystack []string, needle string) bool {
+			for _, elem := range haystack {
+				if elem == needle {
 					return true
 				}
 			}
 			return false
 		},
-		"combine": func(s ...[]string) []string {
-			ret := []string{}
-			for i := range s {
-				ret = append(ret, s[i]...)
+		"combine": func(slices ...[]string) []string {
+			combined := []string{}
+			for _, elem := range slices {
+				combined = append(combined, elem...)
 			}
-			return ret
+			return combined
 		},
-		"list": func(s ...interface{}) []interface{} {
-			return s
+		"list": func(elems ...interface{}) []interface{} {
+			// This turns all arguments into a slice,
+			//  as those cannot be directly created from within templates
+			return elems
 		},
 		"lower": strings.ToLower,
 		"title": strings.Title,
-		"exists": func(s string) bool {
-			if _, err := os.Stat(filepath.Join(getTemplateDir(), s)); err == nil {
+		"exists": func(filename string) bool {
+			if _, err := os.Stat(filepath.Join(getTemplateDir(), filename)); err == nil {
 				return true
 			} else if os.IsNotExist(err) {
 				return false
@@ -69,23 +73,58 @@ func LoadTemplates() {
 			log.Print("file exists fucked up")
 			return false
 		},
-		"getUser": func(uid string) *data.User {
-			// TODO: return data.User of uid if exists, else nil
+		"prettyTime": func(t time.Time) string {
+			return humanize.RelTime(t, time.Now(), "ago", "in the future")
+		},
+		"getUser": func(username string) *data.User {
+			// TODO: return data.User of username if exists, else nil
 			return nil
+		},
+		"getFriends": func() []*data.User {
+			// TODO: return slice of friends as data.User objects
+			// TODO: remove mock data below
+			friend1 := new(data.User)
+			friend1.Username = "burgerman420"
+			friend1.Displayname = "Bob"
+
+			friend2 := new(data.User)
+			friend2.Username = "wonderland69"
+			friend2.Displayname = "Alice"
+
+			friend3 := new(data.User)
+			friend3.Username = "eavesdr0pper"
+			friend3.Displayname = "Eve"
+
+			return []*data.User{friend1, friend2, friend3}
+		},
+		"getLog": func() []*data.LogEntry {
+			return []*data.LogEntry{}
+		},
+		"getNotificationCount": func() int {
+			// TODO: return amount of unread notifications
+			return 420
+		},
+		"getFriendCount": func() int {
+			// TODO: return amount of friends
+			return 3
+		},
+		"getLogUnreadCount": func() int {
+			// TODO: return amount of unread log entries
+			return 69
 		},
 		"redirect": func(to string) template.HTML {
 			return template.HTML(fmt.Sprintf("<meta http-equiv=refresh content='0; url = %s'", to))
 		},
 	}
-	funcMap["include"] = func(s string, d interface{}) interface{} {
-		ext := filepath.Ext(s)
+	funcMap["include"] = func(filename string, fd FrontendData) interface{} {
+		ext := filepath.Ext(filename)
 
 		var buf strings.Builder
 		err := template.Must(
-			template.New(path.Base(s)).
+			template.New(path.Base(filename)).
 				Funcs(funcMap).
-				ParseFiles(filepath.Join(getTemplateDir(), s))).
-			Execute(&buf, d)
+				ParseFiles(filepath.Join(getTemplateDir(), filename))).
+			Execute(&buf, fd)
 		if err != nil {
 			log.Print(err)
 		}

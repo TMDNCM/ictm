@@ -1,0 +1,45 @@
+h2, h2 > * {
+	display: flex;
+	align-items: center;
+	line-height: 2rem;
+}
+h2 a {
+	text-decoration: inherit;
+}
+h2 a:hover {
+	text-decoration: underline;
+}
+main > div > div > p {
+	font-family: var(--font-mono);
+	width: fit-content;
+}
+main > div > div > p:nth-of-type(2) {
+	font-family: var(--font-mono);
+	margin-top: .5rem;
+	margin-left: auto;
+	color: rgb(var(--secondary));
+}
+main > div > div, main > div > h2 {
+	width: 100%;
+	border: 0 !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+main > div > h2 {
+	padding-top: 1rem !important;
+}
+main > div {
+	min-width: 70%;
+	padding-bottom: 1rem;
+}
+i {
+	font-family: var(--font-sans);
+}
+hr {
+	margin-top: .75rem !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+hr:last-of-type {
+	display: none;
+}

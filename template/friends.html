@@ -1,0 +1,23 @@
+{{- range $friend := getFriends -}}
+	<div>
+		<h2><b>{{- $friend.Displayname -}}</b>&nbsp;({{- $friend.Username -}})</h2>
+		<hr>
+		<div>
+			<a class="button" href="/user/{{- $friend.Username -}}">Visit Profile</a>
+			<form method="post">
+				<input type="hidden" name="remove-friend" value="{{- $friend.Username -}}">
+				<span class="button danger">
+					<input id="remove-friend-safety" type="checkbox">
+					<label for="remove-friend-safety">Remove friend</label>
+					<input id="remove-friend" type="submit" value="You sure?">
+				</span>
+			</form>
+		</div>
+	</div>
+{{- else -}}
+	<div>
+		<h2>Your friend list is empty</h2>
+		<hr>
+		<span>Add some and come back to this page.</span>
+	</div>
+{{- end -}}

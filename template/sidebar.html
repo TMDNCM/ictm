@@ -1,72 +1,93 @@
+{{- $current := lower .Page -}}
 <ul>
 	{{if .LoggedIn}}
 	<li>
-		<a href="/dashboard">
-			<i class="bx bx-home"></i>
-			<span>Dashboard</span>
-		</a>
+		{{- with $elem := "dashboard" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bx-home"></i>
+				<span>{{- title $elem -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	<li>
-		<a href="/profile">
-			<i class="bx bx-user"></i>
-			<span>Profile</span>
-		</a>
+		{{- with $elem := "profile" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bx-user"></i>
+				<span>{{- title $elem -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	<li>
-		<a href="/notifications">
-			<i class="bx bx-bell"></i>
-			<span>Notifications</span>
-			<span>420</span>
-		</a>
+		{{- with $elem := "notifications" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bx-bell"></i>
+				<span>{{- title $elem -}}</span>
+				<span>{{- getNotificationCount -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	<li>
-		<a href="/log">
-			<i class="bx bx-list-ul"></i>
-			<span>Log</span>
-			<span>69</span>
-		</a>
+		{{- with $elem := "log" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bx-list-ul"></i>
+				<span>{{- title $elem -}}</span>
+				<span>{{- getLogUnreadCount -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	<li>
-		<a href="/friends">
-			<i class="bx bxs-user-account"></i>
-			<span>Friends</span>
-			<span>3</span>
-		</a>
+		{{- with $elem := "friends" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bxs-user-account"></i>
+				<span>{{- title $elem -}}</span>
+				<span>{{- getFriendCount -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	<li>
-		<a href="/stock">
-			<i class="bx bx-cabinet"></i>
-			<span>My Stock</span>
-		</a>
+		{{- with $elem := "stock" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bx-cabinet"></i>
+				<span>{{- title $elem -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	{{else}}
 	<li>
-		<a href="/about">
-			<i class="bx bx-question-mark"></i>
-			<span>About</span>
-		</a>
+		{{- with $elem := "about" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bx-question-mark"></i>
+				<span>{{- title $elem -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	{{end}}
 	<div></div>
 	{{if .LoggedIn}}
 	<li>
-		<a href="/logout">
-			<i class="bx bx-log-out"></i>
-			<span>Logout</span>
-		</a>
+		{{- with $elem := "logout" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bx-log-out"></i>
+				<span>{{- title $elem -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	{{else}}
 	<li>
-		<a href="/signup">
-			<i class="bx bx-user-plus"></i>
-			<span>Sign up</span>
-		</a>
+		{{- with $elem := "signup" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bx-user-plus"></i>
+				<span>{{- title $elem -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	<li>
-		<a href="/login">
-			<i class="bx bx-log-in"></i>
-			<span>Login</span>
-		</a>
+		{{- with $elem := "login" -}}
+			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
+				<i class="bx bx-log-in"></i>
+				<span>{{- title $elem -}}</span>
+			</a>
+		{{- end -}}
 	</li>
 	{{end}}
 </ul>
