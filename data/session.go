@@ -5,13 +5,14 @@ import(
 )
 type Session struct{
 	User *User
-	lastActive time.Time
-	expiry time.Time
+	Token string
+	LastActive time.Time
+	Expiry time.Time
 }
 
 
-func (s *Session) expired() bool{
-	if time.Now().After( s.expiry ){
+func (s *Session) Expired() bool{
+	if time.Now().After( s.Expiry ){
 		return true;
 	}else{
 		return false;
