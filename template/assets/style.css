@@ -50,6 +50,37 @@ button, input, optgroup, select, textarea {
 	font-size: 100%;
 	background: transparent;
 }
+section {
+	padding-top: 0;
+}
+section > *:last-child, form > *:last-child {
+	margin-bottom: 0;
+}
+fieldset {
+	margin: 0;
+	padding: 0;
+	margin-bottom: 1.25rem;
+	box-shadow: var(--shadow);
+}
+fieldset > span:first-of-type {
+	border-top-left-radius: .25rem !important;
+	border-top-right-radius: .25rem !important;
+}
+fieldset > span:last-of-type {
+	border-bottom-left-radius: .25rem !important;
+	border-bottom-right-radius: .25rem !important;
+}
+fieldset > span {
+	box-shadow: none !important;
+	border-radius: 0 !important;
+	margin: 0 !important;
+}
+fieldset > span > input {
+	border-bottom: 2px solid rgb(var(--primary));
+}
+fieldset > span:last-of-type > input {
+	border-bottom: 0;
+}
 /**/
 
 body {
@@ -62,12 +93,15 @@ body {
 
 /* Sidebar */
 body > nav {
+	top: 0;
+	position: sticky;
+	height: fit-content;
 	display: flex;
 	flex-direction: column;
 	width: 20rem;
 	background: white;
 	z-index: 50; /* for the box shadow */
-	box-shadow: var(--shadow);
+	margin-right: 4px;
 }
 /* Sidebar header */
 body > nav > div {
@@ -87,11 +121,16 @@ h1 {
 	font-family: var(--font-mono);
 	margin-bottom: 1rem;
 }
+h2 {
+	color: rgb(var(--primary));
+	font-size: 1.2rem;
+	font-family: var(--font-mono);
+	margin-bottom: 1rem;
+}
 /* Sidebar list */
 body > nav > ul {
 	display: flex;
 	flex-direction: column;
-	height: 100%;
 	border-top-width: 4px;
 	border-style: dashed;
 	border-color: rgb(var(--color-gray-100));
@@ -108,7 +147,7 @@ nav > ul > li > a:hover {
 	background: rgb(var(--color-gray-50));
 }
 /* Sidebar entry icon */
-nav > ul > li > a > i, i::before {
+nav > ul > li > a > i, nav > ul > li > a > i::before {
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
@@ -145,7 +184,6 @@ body > main {
 	width: 100%;
 	background: rgb(var(--color-gray-100));
 }
-/* Login box */
 @media only screen and (max-width: 650px) {
 	main > * {
 		border: none;
@@ -153,6 +191,12 @@ body > main {
 		height: 100% !important;
 		padding-top: .75rem !important;
 	}
+}
+main > .fill {
+	border: none;
+	width: 100% !important;
+	height: 100% !important;
+	padding-top: .75rem !important;
 }
 main > * {
 	display: flex;
@@ -172,22 +216,21 @@ main > * > * {
 	margin-bottom: .5rem;
 	padding-top: .5rem;
 }
-main > * > *:nth-child(2) {
+main > * > *:not(:nth-child(1)) {
 	padding: 2rem;
 	padding-top: 1rem;
 	border-top: 4px dashed rgb(var(--color-gray-100));
 }
 /* Input groups */
-#login > span {
+form span {
 	display: flex;
 	box-shadow: var(--shadow);
 	margin-bottom: 1.25rem;
 	font-size: .85rem;
-	border: 1px solid rgb(var(--color-gray-100));
 	border-radius: .25rem;
 	overflow: hidden;
 }
-#login > span > label {
+form span > label {
 	width: 10rem;
 	color: rgb(var(--color-gray-100));
 	background: rgb(var(--primary));
@@ -196,15 +239,14 @@ main > * > *:nth-child(2) {
 	font-weight: 900;
 	user-select: none;
 }
-#login > span > input {
+form span > input {
 	width: 100%;
 	color: rgb(var(--color-green-700));
 	font-family: var(--font-mono);
 	padding: .5rem;
-	margin-left: .5rem;
 }
 /* "Forgot Password?" & "Already registered?" */
-#login > div {
+form > div {
 	margin-top: .25rem;
 	margin-bottom: -1.35275rem;
 	display: flex;
@@ -213,22 +255,22 @@ main > * > *:nth-child(2) {
 	font-weight: 700;
 	color: rgba(var(--primary),.7);
 }
-#login > div > a:hover, #login > div > details > summary:hover {
+form > div > a:hover, form > div > details > summary:hover {
 	text-decoration: underline;
 	cursor: pointer;
 }
-#login > div > details[open] > summary {
+form > div > details[open] > summary {
 	color: rgb(var(--primary));
 	text-decoration: underline;
 }
-#login > div > a {
+form > div > a {
 	margin-left: auto;
 	text-align: right;
 }
-#login > div > details[open] ~ * {
+form > div > details[open] ~ * {
 	display: none;
 }
-#login > div > details[open] {
+form > div > details[open] {
 	border-width: 2px;
 	border-radius: .25rem;
 	width: 100%;
@@ -241,7 +283,7 @@ main > * > *:nth-child(2) {
 	background: rgba(var(--primary),.1);
 }
 /* Submit button */
-#login > input[type=submit] {
+form input[type=submit] {
 	display: revert;
 	width: 100%;
 	margin: 0;
@@ -253,7 +295,44 @@ main > * > *:nth-child(2) {
 	border-width: 2px;
 	border-color: rgb(var(--primary));
 }
-#login > input[type=submit]:hover {
+form span.button {
+	border-radius: .25rem;
+	border-width: 2px;
+	border-color: rgb(var(--primary));
+	background: rgb(var(--primary));
+	font-size: 1.25rem;
+}
+form span.button:hover > label {
+	color: rgb(var(--primary));
+	background: white;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	cursor: pointer;
+}
+form span.button.danger {
+	border-color: rgb(var(--color-red-500));
+}
+form span.button.danger > label {
+	background: rgb(var(--color-red-500));
+}
+form span.button.danger:hover > label {
+	color: rgb(var(--color-red-500));
+	background: rgb(var(--color-gray-100));
+}
+form span.button.danger > input[type=submit] {
+	color: rgb(var(--color-red-500));
+}
+form span.button.danger > input[type=submit]:hover, form span.button.danger:hover > input[type=submit] {
+	color: rgb(var(--color-gray-100));
+	background: rgb(var(--color-red-500));
+	cursor: pointer;
+}
+form span > input[type=submit] {
+	border: none;
+	border-radius: 0;
+	font-family: var(--font-mono);
+}
+form span.button:hover > input[type=submit], form input[type=submit]:hover {
 	color: rgb(var(--color-gray-100));
 	background: rgb(var(--primary));
 	cursor: pointer;
