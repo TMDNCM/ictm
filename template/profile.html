@@ -1,0 +1,59 @@
+<div class="fill">
+	<h1>Your Profile</h1>
+	<section>
+		<h2>
+			<i class="bx bx-rename"></i>
+			Account
+		</h2>
+		<div>
+			<form method="post">
+				<span>
+					<label for="username">Username</label>
+					<input id="username" name="username" type="username" placeholder="someonespecial" disabled>
+				</span>
+			</form>
+		</div>
+	</section>
+	<section>
+		<h2>
+			<i class="bx bx-lock"></i>
+			Change password
+		</h2>
+		<form method="post">
+			<fieldset>
+				<span>
+					<label for="password-current">Current Password</label>
+					<input id="password-current" name="password" type="password" placeholder="*******">
+				</span>
+				<span>
+					<label for="password-new">New Password</label>
+					<input id="password-new" name="password-new" type="password" placeholder="*******">
+				</span>
+				<span>
+					<label for="password-new-again">New Password, again</label>
+					<input id="password-new-again" name="password-new-again" type="password" placeholder="*******">
+				</span>
+			</fieldset>
+			<span class="button">
+				<label for="password-update">
+					<i class="bx bx-refresh"></i>
+				</label>
+				<input id="password-update" type="submit" value="Update">
+			</span>
+		</form>
+	</section>
+	<section>
+		<h2>
+			<i class="bx bx-error"></i>
+			Danger zone
+		</h2>
+		<form method="post">
+			<span class="button danger">
+				<label for="delete-account">
+					<i class="bx bx-trash"></i>
+				</label>
+				<input id="delete-account" type="submit" value="Delete account">
+			</span>
+		</form>
+	</section>
+</div>
