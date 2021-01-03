@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -73,7 +74,14 @@ func LoadTemplates() {
 		return rendered
 	}
 
-	indexTemplate = template.Must(template.New("").Funcs(funcMap).ParseGlob("*.html")).Lookup("index.html")
+	_, caller, _, _ := runtime.Caller(0)
+	caller, err := filepath.EvalSymlinks(caller)
+	if err != nil {
+		log.Fatal(err)
+	}
+	templateDir := filepath.Dir(caller)
+	indexTemplate = template.Must(template.New("").Funcs(funcMap).
+		ParseGlob(filepath.Join(templateDir, "*.html"))).Lookup("index.html")
 }
 
 func GetTemplates() *template.Template {
