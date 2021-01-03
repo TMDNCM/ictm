@@ -50,8 +50,8 @@ func (h *WebHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if h.pageVisibility[fd.Page] == "" {
-		// TODO: redirect to 404
-		return
+		fd.Page = "404"
+		w.WriteHeader(http.StatusNotFound)
 	}
 
 	if !fd.LoggedIn && h.pageVisibility[fd.Page] == "private" {
