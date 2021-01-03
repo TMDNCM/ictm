@@ -34,7 +34,6 @@ func getTemplateDir() string {
 	exec := os.Args[0]
 	execDir := filepath.Dir(exec)
 	templateDir := filepath.Join(execDir, "template")
-	log.Println(templateDir)
 	return templateDir
 }
 
