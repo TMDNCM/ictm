@@ -75,11 +75,14 @@ fieldset > span {
 	border-radius: 0 !important;
 	margin: 0 !important;
 }
-fieldset > span > input {
+fieldset > span > input, fieldset > span > select {
 	border-bottom: 2px solid rgb(var(--primary));
 }
-fieldset > span:last-of-type > input {
+fieldset > span:last-of-type > * {
 	border-bottom: 0;
+}
+fieldset > span:last-of-type {
+	border: 0;
 }
 hr {
 	padding-bottom: .5rem !important;
@@ -249,7 +252,7 @@ form span > label {
 	font-weight: 900;
 	user-select: none;
 }
-form span > input {
+form span > input, form span > select {
 	width: 100%;
 	color: rgb(var(--color-green-700));
 	font-family: var(--font-mono);

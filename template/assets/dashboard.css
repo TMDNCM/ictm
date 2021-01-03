@@ -1,0 +1,35 @@
+h2 a {
+	text-decoration: inherit;
+}
+hr {
+	padding: 0 !important;
+	background: rgb(var(--color-gray-100));
+	height: 2px;
+}
+main > div > div {
+	display: flex;
+	flex-flow: column wrap;
+	flex-direction: row;
+	width: 100%;
+	height: 100%;
+	background: rgb(var(--color-gray-100));
+	padding: 0 !important;
+	color: rgb(var(--secondary));
+}
+section {
+	background: white;
+	width: 50%;
+	padding: 2rem;
+	border-right: 4px dashed rgb(var(--color-gray-100));
+	border-bottom: 4px dashed rgb(var(--color-gray-100));
+}
+div > p:last-of-type {
+	font-family: var(--font-mono);
+}
+section > div > h2 {
+	margin: 0;
+	margin-top: .5rem;
+}
+label {
+	width: 14rem !important;
+}
