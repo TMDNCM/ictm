@@ -60,8 +60,8 @@ func LoadTemplates() {
 		},
 		"lower": strings.ToLower,
 		"title": strings.Title,
-		"exists": func(s string) bool {
-			if _, err := os.Stat(filepath.Join(getTemplateDir(), s)); err == nil {
+		"exists": func(filename string) bool {
+			if _, err := os.Stat(filepath.Join(getTemplateDir(), filename)); err == nil {
 				return true
 			} else if os.IsNotExist(err) {
 				return false
@@ -69,23 +69,39 @@ func LoadTemplates() {
 			log.Print("file exists fucked up")
 			return false
 		},
-		"getUser": func(uid string) *data.User {
-			// TODO: return data.User of uid if exists, else nil
+		"getUser": func(username string) *data.User {
+			// TODO: return data.User of username if exists, else nil
 			return nil
+		},
+		"getFriends": func() []*data.User {
+			// TODO: return slice of friends as data.User objects
+			return []*data.User{}
+		},
+		"getNotificationCount": func() int {
+			// TODO: return amount of unread notifications
+			return 420
+		},
+		"getFriendCount": func() int {
+			// TODO: return amount of friends
+			return 3
+		},
+		"getLogUnreadCount": func() int {
+			// TODO: return amount of unread log entries
+			return 69
 		},
 		"redirect": func(to string) template.HTML {
 			return template.HTML(fmt.Sprintf("<meta http-equiv=refresh content='0; url = %s'", to))
 		},
 	}
-	funcMap["include"] = func(s string, d interface{}) interface{} {
-		ext := filepath.Ext(s)
+	funcMap["include"] = func(filename string, fd FrontendData) interface{} {
+		ext := filepath.Ext(filename)
 
 		var buf strings.Builder
 		err := template.Must(
-			template.New(path.Base(s)).
+			template.New(path.Base(filename)).
 				Funcs(funcMap).
-				ParseFiles(filepath.Join(getTemplateDir(), s))).
-			Execute(&buf, d)
+				ParseFiles(filepath.Join(getTemplateDir(), filename))).
+			Execute(&buf, fd)
 		if err != nil {
 			log.Print(err)
 		}
