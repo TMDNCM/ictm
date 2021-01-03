@@ -36,8 +36,6 @@ func NewHandler() *WebHandler {
 
 func (h *WebHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	reqPath := r.URL.Path
-	log.Println(reqPath)
-
 	tp := template.GetTemplates()
 
 	// TODO: stop using fake login
@@ -70,5 +68,6 @@ func (h *WebHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		fd.Alert.Message = "Wrong username or password."
 	}
 
+	log.Println(r.RemoteAddr, r.Method, reqPath)
 	tp.Execute(w, fd)
 }
