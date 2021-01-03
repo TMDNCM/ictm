@@ -145,7 +145,7 @@ nav > ul > li > a {
 	height: 3rem;
 	color: rgb(var(--secondary));
 }
-nav > ul > li > a:hover {
+nav > ul > li > a:hover, nav > ul > li > a.selected {
 	background: rgb(var(--color-gray-50));
 }
 /* Sidebar entry icon */
