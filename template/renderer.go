@@ -8,7 +8,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"runtime"
 	"strings"
 )
 
@@ -24,13 +23,13 @@ var (
 )
 
 func getTemplateDir() string{
-	_, caller, _, _ := runtime.Caller(0)
-	caller, err := filepath.EvalSymlinks(caller)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return filepath.Dir(caller)
+	exec := os.Args[0]
+	execDir := filepath.Dir(exec)
+	templateDir := filepath.Join(execDir, "template")
+	log.Println(templateDir)
+	return templateDir
 }
+	
 func LoadTemplates() {
 	funcMap := template.FuncMap{
 		"split": strings.Split,
