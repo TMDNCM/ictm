@@ -22,14 +22,14 @@ var (
 	indexTemplate *template.Template
 )
 
-func getTemplateDir() string{
+func getTemplateDir() string {
 	exec := os.Args[0]
 	execDir := filepath.Dir(exec)
 	templateDir := filepath.Join(execDir, "template")
 	log.Println(templateDir)
 	return templateDir
 }
-	
+
 func LoadTemplates() {
 	funcMap := template.FuncMap{
 		"split": strings.Split,
@@ -54,7 +54,7 @@ func LoadTemplates() {
 		"lower": strings.ToLower,
 		"title": strings.Title,
 		"exists": func(s string) bool {
-			if _, err := os.Stat(s); err == nil {
+			if _, err := os.Stat(filepath.Join(getTemplateDir(), s)); err == nil {
 				return true
 			} else if os.IsNotExist(err) {
 				return false
@@ -67,7 +67,11 @@ func LoadTemplates() {
 		ext := filepath.Ext(s)
 
 		var buf strings.Builder
-		err := template.Must(template.New(path.Base(s)).Funcs(funcMap).ParseFiles(filepath.Join(getTemplateDir(),s))).Execute(&buf, d)
+		err := template.Must(
+			template.New(path.Base(s)).
+				Funcs(funcMap).
+				ParseFiles(filepath.Join(getTemplateDir(), s))).
+			Execute(&buf, d)
 		if err != nil {
 			log.Print(err)
 		}
@@ -83,7 +87,7 @@ func LoadTemplates() {
 
 	indexTemplate = template.Must(template.New("").Funcs(funcMap).
 		ParseGlob(filepath.Join(getTemplateDir(), "*.html"))).Lookup("index.html")
-		log.Println(indexTemplate)
+	log.Println(indexTemplate)
 }
 
 func GetTemplates() *template.Template {
