@@ -40,23 +40,25 @@ func getTemplateDir() string {
 func LoadTemplates() {
 	funcMap := template.FuncMap{
 		"split": strings.Split,
-		"contains": func(s []string, e string) bool {
-			for _, a := range s {
-				if a == e {
+		"contains": func(haystack []string, needle string) bool {
+			for _, elem := range haystack {
+				if elem == needle {
 					return true
 				}
 			}
 			return false
 		},
-		"combine": func(s ...[]string) []string {
-			ret := []string{}
-			for i := range s {
-				ret = append(ret, s[i]...)
+		"combine": func(slices ...[]string) []string {
+			combined := []string{}
+			for _, elem := range slices {
+				combined = append(combined, elem...)
 			}
-			return ret
+			return combined
 		},
-		"list": func(s ...interface{}) []interface{} {
-			return s
+		"list": func(elems ...interface{}) []interface{} {
+			// This turns all arguments into a slice,
+			//  as those cannot be directly created from within templates
+			return elems
 		},
 		"lower": strings.ToLower,
 		"title": strings.Title,
