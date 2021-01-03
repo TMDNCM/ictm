@@ -81,6 +81,9 @@ fieldset > span > input {
 fieldset > span:last-of-type > input {
 	border-bottom: 0;
 }
+hr {
+	padding-bottom: .5rem !important;
+}
 /**/
 
 body {
@@ -183,6 +186,7 @@ nav > ul > div {
 /* Content */
 body > main {
 	display: flex;
+	flex-direction: column;
 	width: 100%;
 	background: rgb(var(--color-gray-100));
 }
@@ -192,6 +196,8 @@ body > main {
 		width: 100% !important;
 		height: 100% !important;
 		padding-top: .75rem !important;
+		margin-top: 0 !important;
+		margin-bottom: 1rem;
 	}
 }
 main > .fill {
@@ -199,6 +205,7 @@ main > .fill {
 	width: 100% !important;
 	height: 100% !important;
 	padding-top: .75rem !important;
+	margin: 0 !important;
 }
 main > * {
 	display: flex;
@@ -207,14 +214,15 @@ main > * {
 	box-shadow: var(--shadow);
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 2rem;
 	align-self: center;
 	border-width: 2px;
 	border-radius: .25rem;
 	border-color: rgb(var(--primary));
 }
 main > * > * {
-	padding-left: 2.5rem;
-	padding-right: 2.5rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
 	margin-bottom: .5rem;
 	padding-top: .5rem;
 }
@@ -311,13 +319,14 @@ form span.button:hover > label {
 	border-bottom-right-radius: 0;
 	cursor: pointer;
 }
-form span.button.danger {
+.button.danger {
 	border-color: rgb(var(--color-red-500));
+	color: white;
 }
-form span.button.danger > label {
+.button.danger, .button.danger > label {
 	background: rgb(var(--color-red-500));
 }
-form span.button.danger:hover > label {
+a.button.danger:hover, .button.danger:hover > label {
 	color: rgb(var(--color-red-500));
 	background: white;
 }
