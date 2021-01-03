@@ -100,7 +100,6 @@ body > nav {
 	flex-direction: column;
 	width: 20rem;
 	background: white;
-	z-index: 50; /* for the box shadow */
 	margin-right: 4px;
 }
 /* Sidebar header */
