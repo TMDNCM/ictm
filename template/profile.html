@@ -6,7 +6,7 @@
 			Account details
 		</h2>
 		<div>
-			<h2><b>{{.User.Displayname}}</b><br><a href="/user">View public profile</a></h2>
+			<h2><b>{{.User.Displayname}}</b><br><a href="/user/{{- .User.Username -}}">View public profile</a></h2>
 			<form method="post">
 				<span>
 					<label for="username">Username</label>
