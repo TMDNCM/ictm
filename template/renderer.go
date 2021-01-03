@@ -77,7 +77,23 @@ func LoadTemplates() {
 		},
 		"getFriends": func() []*data.User {
 			// TODO: return slice of friends as data.User objects
-			return []*data.User{}
+			// TODO: remove mock data below
+			friend1 := new(data.User)
+			friend1.Username = "burgerman420"
+			friend1.Displayname = "Bob"
+
+			friend2 := new(data.User)
+			friend2.Username = "wonderland69"
+			friend2.Displayname = "Alice"
+
+			friend3 := new(data.User)
+			friend3.Username = "eavesdr0pper"
+			friend3.Displayname = "Eve"
+
+			return []*data.User{friend1, friend2, friend3}
+		},
+		"getLog": func() []*data.LogEntry {
+			return []*data.LogEntry{}
 		},
 		"getNotificationCount": func() int {
 			// TODO: return amount of unread notifications
