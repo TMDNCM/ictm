@@ -13,6 +13,9 @@
 		<h2>
 			<i class="bx bxs-user-account"></i>
 			Account details
+			{{- if eq $user .User -}}
+				&nbsp;<a href="/profile">edit</a>
+			{{- end -}}
 		</h2>
 		<div>
 			<h2><b>Name:</b>&nbsp;{{$user.Displayname}}</h2>
