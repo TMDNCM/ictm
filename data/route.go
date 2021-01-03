@@ -1,6 +1,5 @@
 package data
 
-
-type Route struct{
+type Route struct {
 	Name string
 }

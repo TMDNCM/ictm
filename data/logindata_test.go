@@ -1,12 +1,10 @@
 package data
 
-
-import(
+import (
 	"testing"
 )
 
-
-func TestHash(t *testing.T){
-	ld := &LoginData{Username:"testuser", Password:"secret"}
+func TestHash(t *testing.T) {
+	ld := &LoginData{Username: "testuser", Password: "secret"}
 	t.Log(ld, ld.Hash([]byte("adslfjksdfajasdjhgljhg")))
 }

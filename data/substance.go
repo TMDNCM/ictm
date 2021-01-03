@@ -1,6 +1,5 @@
 package data
 
-
-type Substance struct{
+type Substance struct {
 	Name string
 }

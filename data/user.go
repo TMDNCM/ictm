@@ -1,12 +1,7 @@
 package data
 
-
-type User struct{
-	Username string
+type User struct {
+	Username    string
 	Displayname string
-	Email string
+	Email       string
 }
-
-
-
-

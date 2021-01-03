@@ -1,20 +1,20 @@
 package data
 
-import(
+import (
 	"time"
 )
-type Session struct{
-	User *User
-	Token string
+
+type Session struct {
+	User       *User
+	Token      string
 	LastActive time.Time
-	Expiry time.Time
+	Expiry     time.Time
 }
 
-
-func (s *Session) Expired() bool{
-	if time.Now().After( s.Expiry ){
-		return true;
-	}else{
-		return false;
+func (s *Session) Expired() bool {
+	if time.Now().After(s.Expiry) {
+		return true
+	} else {
+		return false
 	}
 }

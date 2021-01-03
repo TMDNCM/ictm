@@ -1,13 +1,13 @@
 package data
 
-import(
+import (
 	"time"
 )
 
-type LogEntry struct{
-	User *User
+type LogEntry struct {
+	User      *User
 	Substance *Substance
-	Route *Route
-	Amount int
-	Created time.Time
+	Route     *Route
+	Amount    int
+	Created   time.Time
 }
