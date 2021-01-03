@@ -113,7 +113,7 @@ func LoadTemplates() {
 			return 69
 		},
 		"redirect": func(to string) template.HTML {
-			return template.HTML(fmt.Sprintf("<meta http-equiv=refresh content='0; url = %s'", to))
+			return template.HTML(fmt.Sprintf("<meta http-equiv=refresh content='0; url = %s'>", to))
 		},
 	}
 	funcMap["include"] = func(filename string, fd FrontendData) interface{} {
