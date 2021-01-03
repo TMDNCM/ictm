@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/Fliegermarzipan/gallipot/template"
+	"github.com/Fliegermarzipan/gallipot/data"
 	htemplate "html/template"
 	"log"
 	"net/http"
@@ -31,27 +32,32 @@ func NewHandler() *WebHandler {
 func (h *WebHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	reqPath := r.URL.Path
-
-	fd := new(template.FrontendData)
-	fd.LoggedIn = false
 	tp := template.GetTemplates()
 
+	// TODO: stop using fake login
+	fd := template.FrontendData{}
+	fd.LoggedIn = true
+	fd.User = new(data.User)
+	fd.User.Username = "someonespecial"
+	fd.User.Displayname = "Someone Special"
+	fd.User.Email = "foo@example.com"
+
+
 	path := strings.Split(reqPath, "/")[1:]
-	page := path[0]
-	if len(page) == 0 {
-		page = "about"
+	fd.Page = path[0]
+	if len(fd.Page) == 0 {
+		fd.Page = "about"
 	}
 
-	if h.pageVisibility[page] == "" {
+	if h.pageVisibility[fd.Page] == "" {
 		// TODO: redirect to 404
 		return
 	}
 
-	if !fd.LoggedIn && h.pageVisibility[page] == "private" {
+	if !fd.LoggedIn && h.pageVisibility[fd.Page] == "private" {
 		// TODO: redirect to login
 	}
 
-	fd.Page = page
 	log.Println(fd.Page)
 
 	tp.Execute(w, fd)
