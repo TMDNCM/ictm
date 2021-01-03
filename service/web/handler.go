@@ -1,8 +1,8 @@
 package web
 
 import (
-	"github.com/Fliegermarzipan/gallipot/template"
 	"github.com/Fliegermarzipan/gallipot/data"
+	"github.com/Fliegermarzipan/gallipot/template"
 	htemplate "html/template"
 	"log"
 	"net/http"
@@ -19,11 +19,15 @@ func NewHandler() *WebHandler {
 	h.t = template.GetTemplates()
 
 	h.pageVisibility = map[string]string{
-		"about":     "public",
-		"signup":    "public",
-		"login":     "public",
-		"dashboard": "private",
-		"profile":   "private",
+		"about":         "public",
+		"signup":        "public",
+		"login":         "public",
+		"dashboard":     "private",
+		"profile":       "private",
+		"notifications": "private",
+		"log":           "private",
+		"friends":       "private",
+		"stock":         "private",
 	}
 
 	return h
@@ -42,9 +46,8 @@ func (h *WebHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fd.User.Displayname = "Someone Special"
 	fd.User.Email = "foo@example.com"
 
-
-	path := strings.Split(reqPath, "/")[1:]
-	fd.Page = path[0]
+	fd.Path = strings.Split(reqPath, "/")[1:]
+	fd.Page = fd.Path[0]
 	if len(fd.Page) == 0 {
 		fd.Page = "about"
 	}

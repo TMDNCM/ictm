@@ -19,6 +19,7 @@ type UserAlert struct {
 type FrontendData struct {
 	//Request *http.Request
 	LoggedIn bool
+	Path     []string
 	Page     string
 	User     *data.User
 	Alert    *UserAlert
