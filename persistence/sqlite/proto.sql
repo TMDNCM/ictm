@@ -23,4 +23,39 @@ CREATE TABLE  session(
 CREATE UNIQUE INDEX expiry
 ON session(expires);
 
+CREATE TABLE substance(
+	substanceid INTEGER PRIMARY KEY,
+	name TEXT UNIQUE NOT NULLi,
+	unit TEXT NOT NULL DEFAULT 'mg'
+);
+
+CREATE TABLE route(
+	routeid INTEGER PRIMARY KEY,
+	name TEXT UNIQUE NOT NULL
+);
+
+
+CREATE TABLE logentry(
+	entryid INTEGER PRIMARY KEY,
+	created INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+	amount INTEGER NOT NULL,
+	userid INTEGER NOT NULL,
+	substanceid INTEGER NOT NULL,
+	routeid INTEGER NOT NULL,
+	FOREIGN KEY(userid) REFERENCES user(userid),
+	FOREIGN KEY(substanceid) REFERENCES substance(substanceid),
+	FOREIGN KEY(routeid) REFERENCES route(routeid)
+);
+
+CREATE INDEX log_user
+ON logentry(userid);
+
+CREATE INDEX log_substance
+ON logentry(substanceid);
+
+CREATE INDEX log_route
+ON logentry(routeid);
+
+
+
 COMMIT;
