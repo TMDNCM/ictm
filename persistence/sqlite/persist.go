@@ -3,7 +3,7 @@ package sqlite
 import (
 	"crypto/rand"
 	"database/sql"
-	"github.com/Fliegermarzipan/gallipot/data"
+	"github.com/TMDNCM/ictm/data"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"time"

@@ -1,8 +1,8 @@
 package web
 
 import (
-	"github.com/Fliegermarzipan/gallipot/data"
-	"github.com/Fliegermarzipan/gallipot/template"
+	"github.com/TMDNCM/ictm/data"
+	"github.com/TMDNCM/ictm/template"
 	htemplate "html/template"
 	"log"
 	"net/http"

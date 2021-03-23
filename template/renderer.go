@@ -3,7 +3,7 @@ package template
 import (
 	//"net/http"
 	"fmt"
-	"github.com/Fliegermarzipan/gallipot/data"
+	"github.com/TMDNCM/ictm/data"
 	"github.com/dustin/go-humanize"
 	"html/template"
 	"log"

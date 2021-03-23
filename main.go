@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Fliegermarzipan/gallipot/service/web"
+	"github.com/TMDNCM/ictm/service/web"
 	"log"
 	"net/http"
 )

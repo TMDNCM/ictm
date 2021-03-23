@@ -1,7 +1,7 @@
 package persistence
 
 import (
-	"github.com/Fliegermarzipan/gallipot/data"
+	"github.com/TMDNCM/ictm/data"
 	"time"
 )
 
