@@ -5,32 +5,27 @@ import (
 	"time"
 )
 
-type Backend interface {
-	Authenticate(ld data.LoginData) *data.Session
-	Register(ld data.LoginData, email string) data.User
-}
 
 type Persistor interface {
 	Authenticate(ld data.LoginData) Session
 	Register(ld data.LoginData, email string) User
-	getSession(token string) Session
+	GetSession(token string) Session
+	GetUser(username string) User
 }
 
 type Session interface {
+	Get() *data.Session
 	User() User
 	Valid() bool
-	Invalidate() Session
-	Save() error
+	Invalidate()
 }
 
 type User interface {
-	Username() string
+	Get() *data.User
 	SetUsername(username string) User
-	Email() string
 	SetEmail(email string) User
-	Displayname() string
 	SetDisplayname(displayname string) User
-	Save() error
+	Friends() []User
 	History() Doses
 	Log(substance string, route string, dose int, unit string, time time.Time)
 }
@@ -38,20 +33,15 @@ type User interface {
 type Doses interface {
 	Since(t time.Time) Doses
 	After(t time.Time) Doses
-	Between(x, y time.Time) Doses
 	OfSubstance(substance string) Doses
-	LastX(x int) Doses
+	LastX(x uint64) Doses
 	Get() []Dose
 }
 
 type Dose interface {
-	When() time.Time
+	Get() *data.Dose
 	SetWhen(t time.Time) Dose
-	Amount() int
 	SetAmount(amount int) Dose
-	Substance() string
-	setSubstance(substance string) Dose
-	Route() string
+	SetSubstance(substance string) Dose
 	SetRoute(route string) Dose
-	Save() error
 }

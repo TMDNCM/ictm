@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type LogEntry struct {
+type Dose struct {
 	User      *User
 	Substance *Substance
 	Route     *Route
