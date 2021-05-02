@@ -1,20 +1,20 @@
 <!doctype html>
 <html>
-{{- include "head.html" . -}}
+{{- template "head.html" . -}}
 <body>
 	<nav>
 		<div>
 			<h1>ictm</h1>
 		</div>
 		<!--Sidebar content-->
-		{{- include "sidebar.html" . -}}
+		{{- template "sidebar.html" . -}}
 	</nav>
 	<main>
 		<!-- Page content-->
-		{{- include (print .Page ".html") . -}}
+		{{- template "content" . -}}
 	</main>
 	{{- if .Alert -}}
-		{{- include "alert.html" . -}}
+		{{- template "alert.html" . -}}
 	{{- end -}}
 </body>
 </html>

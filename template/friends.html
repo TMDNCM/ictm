@@ -1,4 +1,5 @@
-{{- range $friend := getFriends -}}
+{{define "pagecss" }}{{template "friends.css" . }}{{end}}
+{{- range $friend := .Friends -}}
 	<div>
 		<h2><b>{{- $friend.Displayname -}}</b>&nbsp;({{- $friend.Username -}})</h2>
 		<hr>

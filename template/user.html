@@ -1,13 +1,5 @@
 <div class="fill">
-	{{- $user := .User -}}
-	{{- if len .Path | lt 1 -}}
-		{{- $nuser := index .Path 1 | getUser -}}
-		{{- if $nuser -}}
-			{{- $user = $nuser -}}
-		{{- else -}}
-			{{- redirect "/user" -}}
-		{{- end -}}
-	{{- end -}}
+	{{- $user := .Userpage -}}
 	<h1>User {{$user.Username}}</h1>
 	<section>
 		<h2>

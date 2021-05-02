@@ -2,16 +2,27 @@ package template
 
 import (
 	//"net/http"
-	"fmt"
+	"embed"
+	 "fmt"
 	"github.com/TMDNCM/ictm/data"
-	"github.com/dustin/go-humanize"
+	"github.com/TMDNCM/ictm/persistence"
+	_ "github.com/dustin/go-humanize"
+	"net/http"
 	"html/template"
+	"io"
 	"log"
-	"os"
-	"path"
-	"path/filepath"
+	_ "os"
+	_ "path"
 	"strings"
-	"time"
+	_ "time"
+)
+
+var (
+	//go:embed *
+	tplFiles embed.FS
+
+	templates *template.Template
+	pages = make( map[string]*template.Template)
 )
 
 type UserAlert struct {
@@ -19,133 +30,173 @@ type UserAlert struct {
 	Message string
 }
 
-type FrontendData struct {
+type Renderer interface {
+	TemplateName() string
+	Render(w io.Writer) error
+	register(r Renderer)
+}
+
+func Render(r Renderer, w io.Writer) error {
+	r.register(r) //let it know about itself
+	t := pages[r.TemplateName()]
+	if t == nil{
+		t = template.Must(template.Must(template.Must(GetTemplates().Clone()).
+						  Parse("{{define \"content\"}} {{template \"" + r.TemplateName() + "\" .}} {{end}}")).ParseFS(tplFiles, r.TemplateName()))
+	}
+	if err := t.ExecuteTemplate(w, "index.html", r); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type CommonFields struct {
+	Renderer
+	BaseMethods
 	//Request *http.Request
 	LoggedIn bool
 	Path     []string
-	Page     string
 	User     *data.User
 	Alert    *UserAlert
 }
 
-var (
-	indexTemplate *template.Template
-)
+func (c CommonFields)Page()string{
+	return strings.Split(c.Renderer.TemplateName(), ".")[0]
+}
 
-func getTemplateDir() string {
-	exec := os.Args[0]
-	execDir := filepath.Dir(exec)
-	templateDir := filepath.Join(execDir, "template")
-	return templateDir
+func (c CommonFields) Title() string{
+	return strings.ToTitle(c.Page())
+}
+
+
+type BaseMethods struct {
+	templateName func(Renderer) string
+	render       func(Renderer, io.Writer) error
+}
+
+var defaultMethods = BaseMethods{
+	func(r Renderer) string {
+		return TemplateName(r)
+	}, func(r Renderer, w io.Writer) error{
+		r.register(r)
+		return Render(r, w)
+	}}
+
+type BaseRenderer struct {
+	CommonFields
+	BaseMethods
+}
+
+func (r *BaseRenderer) TemplateName() string {
+	if r.templateName == nil {
+		r.templateName = defaultMethods.templateName
+	}
+	return r.templateName(r.CommonFields.Renderer)
+}
+
+func (r *BaseRenderer) Render(w io.Writer) error{
+	if r.render == nil {
+		r.render = defaultMethods.render
+	}
+	return r.render(r.CommonFields.Renderer, w)
+}
+
+
+func (r *BaseRenderer)register(self Renderer){
+	r.CommonFields.Renderer = self
+}
+
+
+func TemplateName(r Renderer) string {
+	switch (r).(type) {
+	case *LogHtml:
+		return "log.html"
+	case *FriendsHtml:
+		return "friends.html"
+	case *LoginHtml:
+		return "login.html"
+	case *DashboardHtml:
+		return "dashboard.html"
+	case *ProfileHtml:
+		return "profile.html"
+	case *SignupHtml:
+		return "signup.html"
+	case *UserHtml:
+		return "user.html"
+	case *AboutHtml:
+		return "about.html"
+	case *NotificationsHtml:
+		return "notifications.html"
+	case *StockHtml:
+		return "stock.html"
+	default:
+		return fmt.Sprintf("type is %T", r)
+	}
+}
+
+type LogHtml struct {
+	BaseRenderer
+	Entries []data.Dose
+}
+
+type FriendsHtml struct {
+	BaseRenderer
+	Friends []data.User
+}
+
+type LoginHtml struct {
+	BaseRenderer
+	LoginAttempted bool
+	LoginSuccessful bool
+	LoginData *data.LoginData
+}
+
+type AboutHtml struct {
+	BaseRenderer
+}
+
+type SignupHtml struct {
+	BaseRenderer
+	LoginData *data.LoginData
+	Email string
+}
+
+type DashboardHtml struct {
+	BaseRenderer
+}
+
+type ProfileHtml struct {
+	BaseRenderer
+}
+
+type NotificationsHtml struct {
+	BaseRenderer
+}
+
+type StockHtml struct {
+	BaseRenderer
+}
+
+type UserHtml struct {
+	BaseRenderer
+	Userpage *data.User
 }
 
 func LoadTemplates() {
-	funcMap := template.FuncMap{
-		"split": strings.Split,
-		"contains": func(haystack []string, needle string) bool {
-			for _, elem := range haystack {
-				if elem == needle {
-					return true
-				}
-			}
-			return false
-		},
-		"combine": func(slices ...[]string) []string {
-			combined := []string{}
-			for _, elem := range slices {
-				combined = append(combined, elem...)
-			}
-			return combined
-		},
-		"list": func(elems ...interface{}) []interface{} {
-			// This turns all arguments into a slice,
-			//  as those cannot be directly created from within templates
-			return elems
-		},
-		"lower": strings.ToLower,
-		"title": strings.Title,
-		"exists": func(filename string) bool {
-			if _, err := os.Stat(filepath.Join(getTemplateDir(), filename)); err == nil {
-				return true
-			} else if os.IsNotExist(err) {
-				return false
-			}
-			log.Print("file exists fucked up")
-			return false
-		},
-		"prettyTime": func(t time.Time) string {
-			return humanize.RelTime(t, time.Now(), "ago", "in the future")
-		},
-		"getUser": func(username string) *data.User {
-			// TODO: return data.User of username if exists, else nil
-			return nil
-		},
-		"getFriends": func() []*data.User {
-			// TODO: return slice of friends as data.User objects
-			// TODO: remove mock data below
-			friend1 := new(data.User)
-			friend1.Username = "burgerman420"
-			friend1.Displayname = "Bob"
+	
+	templates = template.Must(template.New("").ParseFS(tplFiles, "layout/*"))
+	templates = template.Must(templates.ParseFS(tplFiles, "assets/*"))
 
-			friend2 := new(data.User)
-			friend2.Username = "wonderland69"
-			friend2.Displayname = "Alice"
+	log.Println(GetTemplates())
 
-			friend3 := new(data.User)
-			friend3.Username = "eavesdr0pper"
-			friend3.Displayname = "Eve"
-
-			return []*data.User{friend1, friend2, friend3}
-		},
-		"getLog": func(maxResults int) []*data.LogEntry {
-			return []*data.LogEntry{}
-		},
-		"getNotificationCount": func() int {
-			// TODO: return amount of unread notifications
-			return 420
-		},
-		"getFriendCount": func() int {
-			// TODO: return amount of friends
-			return 3
-		},
-		"getLogUnreadCount": func() int {
-			// TODO: return amount of unread log entries
-			return 69
-		},
-		"redirect": func(to string) template.HTML {
-			return template.HTML(fmt.Sprintf("<meta http-equiv=refresh content='0; url = %s'>", to))
-		},
-	}
-	funcMap["include"] = func(filename string, fd FrontendData) interface{} {
-		ext := filepath.Ext(filename)
-
-		var buf strings.Builder
-		err := template.Must(
-			template.New(path.Base(filename)).
-				Funcs(funcMap).
-				ParseFiles(filepath.Join(getTemplateDir(), filename))).
-			Execute(&buf, fd)
-		if err != nil {
-			log.Print(err)
-		}
-		rendered := buf.String()
-
-		if ext == ".html" {
-			return template.HTML(rendered)
-		} else if ext == ".css" {
-			return template.CSS(rendered)
-		}
-		return rendered
-	}
-
-	indexTemplate = template.Must(template.New("").Funcs(funcMap).
-		ParseGlob(filepath.Join(getTemplateDir(), "*.html"))).Lookup("index.html")
-	log.Println(indexTemplate)
 }
 
 func GetTemplates() *template.Template {
-	if indexTemplate == nil {
+	if templates == nil {
 		LoadTemplates()
 	}
-	return indexTemplate
+	return templates
 }
+
+
+

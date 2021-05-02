@@ -1,27 +1,45 @@
 package template
 
 import (
-	"github.com/TMDNCM/ictm/data"
-	"os"
+	 "github.com/TMDNCM/ictm/data"
+	_ "os"
 	"testing"
+	"bytes"
+	_ "time"
+	"net/http"
 )
 
 func TestRenderer(t *testing.T) {
-	testData := FrontendData{
-		true,
-		new(data.User),
-	}
-	testData.User.Username = "test"
-	testData.User.Displayname = "test2"
-	testData.User.Email = "test@test.com"
+	testUser := new(data.User)
+	testUser.Username = "test"
+	testUser.Displayname = "test2"
+	
+	testUser.Email = "test@test.com"
 
-	tpl := GetTemplates()
-	for _, v := range tpl.Templates() {
-		t.Logf("%#v - %#v", *v, v.Name())
-	}
+	renderer := new(UserHtml)
+	renderer.register(renderer)
+	renderer.Userpage = testUser
+	renderer.User = testUser
 
-	execErr := tpl.Execute(os.Stderr, testData)
-	if execErr != nil {
-		t.Fatal(execErr)
+	buf := new (bytes.Buffer)
+	err := renderer.Render(buf)
+	if err != nil{
+		t.Log("render borken")
+		t.Log(err)
 	}
+	t.Log(buf)
+}
+
+
+
+
+func TestWeb(t *testing.T){
+
+	testUser := new(data.User)
+	testUser.Username = "test"
+	testUser.Displayname = "test2"
+	testUser.Email = "test@test.com"
+
+
+
 }
