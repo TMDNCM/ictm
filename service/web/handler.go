@@ -63,7 +63,7 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 	m.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
 		b := baseRenderer(p, r)
 		if len(b.Path) == 2 {
-			user := p.GetUser(b.Path[1])
+			user := p.GetUser(b.Path[1]).Get()
 			if user != nil {
 				template.UserHtml{BaseRenderer: b, Userpage: user}.Render(w)
 			} else {
@@ -105,7 +105,7 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 		template.FriendsHtml{BaseRenderer: b, Friends: friends}.Render(w)
 	})
 
-	m.Handlefunc("/login", func(w http.ResponseWriter, r *http.Request) {
+	m.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		b := baseRenderer(p, r)
 		var ld *data.LoginData
 		if r.FormValue("username") != "" && r.FormValue("password") != "" {
@@ -117,7 +117,7 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 				sessionData := sess.Get()
 				b.User = sessionData.User
 				http.SetCookie(w, &http.Cookie{Name: "token", Value: sessionData.Token,
-					Expires: sessionData.Expiry})
+					Expires: sessionData.Expiry, SameSite:http.SameSiteStrictMode})
 				template.LoginHtml{BaseRenderer: b, LoginAttempted: true,
 					LoginSuccessful: true, LoginData: ld}.Render(w)
 			} else { //unsuccessful login

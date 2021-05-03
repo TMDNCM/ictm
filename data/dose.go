@@ -6,8 +6,8 @@ import (
 
 type Dose struct {
 	User      *User
-	Substance *Substance
-	Route     *Route
+	Substance string
+	Route     string
 	Amount    int
-	Created   time.Time
+	Taken   time.Time
 }

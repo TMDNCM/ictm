@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-
 type Persistor interface {
 	Authenticate(ld data.LoginData) Session
 	Register(ld data.LoginData, email string) User
@@ -25,13 +24,16 @@ type User interface {
 	SetUsername(username string) User
 	SetEmail(email string) User
 	SetDisplayname(displayname string) User
+	SetPassword(password string) User
+	AddFriend(friend User) User
+	ConfirmFriend(friend User) User
 	Friends() []User
 	History() Doses
 	Log(substance string, route string, dose int, unit string, time time.Time)
 }
 
 type Doses interface {
-	Since(t time.Time) Doses
+	Before(t time.Time) Doses
 	After(t time.Time) Doses
 	OfSubstance(substance string) Doses
 	LastX(x uint64) Doses

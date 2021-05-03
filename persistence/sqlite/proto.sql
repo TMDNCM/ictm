@@ -20,41 +20,45 @@ CREATE TABLE  session(
 	FOREIGN KEY(userid) REFERENCES user(userid)
 );
 
+
+CREATE TABLE friends_t(
+	friendid INTEGER PRIMARY KEY,
+	user1 INTEGER NOT NULL,
+	user2 INTEGER NOT NULL,
+	confirmed INTEGER NOT NULL DEFAULT(0),
+	FOREIGN KEY(user1) REFERENCES user(userid) ON DELETE CASCADE,
+	FOREIGN KEY(user2) REFERENCES user(userid) ON DELETE CASCADE
+);
+
+CREATE VIEW friends(friendid, user, friend, confirmed) AS
+	SELECT friendid, user1, user2, confirmed FROM friends_t 
+	UNION SELECT friendid, user2, user1, confirmed FROM friends_t;
+
+
+
 CREATE UNIQUE INDEX expiry
 ON session(expires);
-
-CREATE TABLE substance(
-	substanceid INTEGER PRIMARY KEY,
-	name TEXT UNIQUE NOT NULLi,
-	unit TEXT NOT NULL DEFAULT 'mg'
-);
-
-CREATE TABLE route(
-	routeid INTEGER PRIMARY KEY,
-	name TEXT UNIQUE NOT NULL
-);
 
 
 CREATE TABLE logentry(
 	entryid INTEGER PRIMARY KEY,
-	created INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
-	amount INTEGER NOT NULL,
-	userid INTEGER NOT NULL,
-	substanceid INTEGER NOT NULL,
-	routeid INTEGER NOT NULL,
-	FOREIGN KEY(userid) REFERENCES user(userid),
-	FOREIGN KEY(substanceid) REFERENCES substance(substanceid),
-	FOREIGN KEY(routeid) REFERENCES route(routeid)
+	taken INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+	amount INTEGER,
+	unit TEXT,
+	user INTEGER NOT NULL,
+	substance TEXT NOT NULL,
+	route TEXT NOT NULL,
+	FOREIGN KEY (user) REFERENCES user(userid)
 );
 
 CREATE INDEX log_user
-ON logentry(userid);
+ON logentry(user);
 
 CREATE INDEX log_substance
-ON logentry(substanceid);
+ON logentry(substance);
 
 CREATE INDEX log_route
-ON logentry(routeid);
+ON logentry(route);
 
 
 
