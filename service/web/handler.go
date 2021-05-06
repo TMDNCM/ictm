@@ -4,9 +4,11 @@ import (
 	"github.com/TMDNCM/ictm/data"
 	"github.com/TMDNCM/ictm/persistence"
 	"github.com/TMDNCM/ictm/template"
-	"log"
+	//"log"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
 var pageVisibility = map[string]string{
@@ -28,16 +30,17 @@ type WebHandler struct {
 	mux            *http.ServeMux
 }
 
-func NewHandler(p persistece.Persistor) *WebHandler {
+func NewHandler(p persistence.Persistor) *WebHandler {
 	h := new(WebHandler)
 	h.persistor = p
+	h.mux = makeServeMux(p)
 	return h
 }
 
 func baseRenderer(p persistence.Persistor, r *http.Request) template.BaseRenderer {
-	var b http.BaseRenderer
+	var b template.BaseRenderer
 	var session persistence.Session
-	cookie, err := r.Cookie(token)
+	cookie, err := r.Cookie("token")
 	if err == nil { //login cookie
 		if session = p.GetSession(cookie.Value); session.Valid() {
 			b.User = session.User().Get()
@@ -52,9 +55,11 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 	m := http.NewServeMux()
 
 	m.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Url.Path == "/" {
+		if r.URL.Path == "/" {
 			b := baseRenderer(p, r)
-			template.DashboardHtml{BaseRenderer: b}.Render(w)
+			t := &template.DashboardHtml{BaseRenderer: b}
+			t.Register(t)
+			t.Render(w)
 		} else {
 			http.NotFound(w, r)
 		}
@@ -65,12 +70,16 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 		if len(b.Path) == 2 {
 			user := p.GetUser(b.Path[1]).Get()
 			if user != nil {
-				template.UserHtml{BaseRenderer: b, Userpage: user}.Render(w)
+				t := &template.UserHtml{BaseRenderer: b, Userpage: user}
+				t.Register(t)
+				t.Render(w)
 			} else {
 				http.NotFound(w, r)
 			}
 		} else if len(b.Path) == 1 {
-			template.UserHtml{BaseRenderer: b, Userpage: b.User}.Render(w)
+			t := &template.UserHtml{BaseRenderer: b, Userpage: b.User}
+			t.Register(t)
+			t.Render(w)
 		} else {
 			http.NotFound(w, r)
 		}
@@ -80,29 +89,42 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 		b := baseRenderer(p, r)
 		entries := p.GetUser(b.User.Username).History()
 		if r.FormValue("after") != "" {
-			entries = entries.After(time.Unix(r.FormValue("after")))
+			if timestamp, err := strconv.ParseInt(r.FormValue("after"), 10, 64); err == nil {
+				entries = entries.After(time.Unix(timestamp, 0))
+			}
 		}
 		if r.FormValue("since") != "" {
-			entries = entries.Since(time.Unix(r.FormValue("since")))
+			if timestamp, err := strconv.ParseInt(r.FormValue("before"), 0, 64); err == nil {
+				entries = entries.Before(time.Unix(timestamp, 0))
+			}
 		}
 		if r.FormValue("substance") != "" {
-			entries = entries.Substance(r.FormValue("substance"))
+			entries = entries.OfSubstance(r.FormValue("substance"))
 		}
-		if count, err := strconv.ParseUint(r.FormValue("count")); err != nil {
-			count = 100
+		if count, err := strconv.ParseUint(r.FormValue("count"), 10, 64); err == nil {
+			entries = entries.LastX(count)
+		} else {
+			entries = entries.LastX(100)
 		}
-		entries = entries.LastX(count)
-
-		template.LogHtml{BaseRenderer: b, Entries: entries.Get()}.Render(w)
+		entrylist := entries.Get()
+		doses := make([]data.Dose, 0, len(entrylist))
+		for _, v := range entrylist {
+			doses = append(doses, *(v.Get()))
+		}
+		t := &template.LogHtml{BaseRenderer: b, Entries: doses}
+		t.Register(t)
+		t.Render(w)
 	})
 
 	m.HandleFunc("/friends", func(w http.ResponseWriter, r *http.Request) {
 		b := baseRenderer(p, r)
 		friends := make([]data.User, 0, len(p.GetUser(b.User.Username).Friends()))
 		for _, v := range p.GetUser(b.User.Username).Friends() {
-			friends = append(friends, v.Get())
+			friends = append(friends, *(v.Get()))
 		}
-		template.FriendsHtml{BaseRenderer: b, Friends: friends}.Render(w)
+		t := &template.FriendsHtml{BaseRenderer: b, Friends: friends}
+		t.Register(t)
+		t.Render(w)
 	})
 
 	m.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
@@ -112,19 +134,25 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 			ld = new(data.LoginData)
 			ld.Username = r.FormValue("username")
 			ld.Password = r.FormValue("password")
-			sess := Authenticate(ld)
+			sess := p.Authenticate(*ld)
 			if sess.Valid() { //successful login
 				sessionData := sess.Get()
 				b.User = sessionData.User
 				http.SetCookie(w, &http.Cookie{Name: "token", Value: sessionData.Token,
-					Expires: sessionData.Expiry, SameSite:http.SameSiteStrictMode})
-				template.LoginHtml{BaseRenderer: b, LoginAttempted: true,
-					LoginSuccessful: true, LoginData: ld}.Render(w)
+					Expires: sessionData.Expiry, SameSite: http.SameSiteStrictMode})
+				t := &template.LoginHtml{BaseRenderer: b, LoginAttempted: true,
+					LoginSuccessful: true, LoginData: ld}
+				t.Register(t)
+				t.Render(w)
 			} else { //unsuccessful login
-				template.LoginHtml{BaseRenderer: b, LoginAttempted: true, LoginData: ld}.Render(w)
+				t := &template.LoginHtml{BaseRenderer: b, LoginAttempted: true, LoginData: ld}
+				t.Register(t)
+				t.Render(w)
 			}
 		} else { //no login attempted
-			template.LoginHtml{BaseRenderer: b}.Render(w)
+			t := &template.LoginHtml{BaseRenderer: b}
+			t.Register(t)
+			t.Render(w)
 		}
 	})
 
@@ -132,6 +160,6 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 }
 
 func (h *WebHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.RemoteAddr, r.Method)
-	template.NewRenderer(r, h.persistor).Render(w)
+	h.mux.ServeHTTP(w, r)
+
 }

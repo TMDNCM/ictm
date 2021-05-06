@@ -9,5 +9,5 @@ type Dose struct {
 	Substance string
 	Route     string
 	Amount    int
-	Taken   time.Time
+	Taken     time.Time
 }

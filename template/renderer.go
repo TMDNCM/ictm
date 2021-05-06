@@ -3,11 +3,10 @@ package template
 import (
 	//"net/http"
 	"embed"
-	 "fmt"
+	"fmt"
 	"github.com/TMDNCM/ictm/data"
-	"github.com/TMDNCM/ictm/persistence"
+	//"github.com/TMDNCM/ictm/persistence"
 	_ "github.com/dustin/go-humanize"
-	"net/http"
 	"html/template"
 	"io"
 	"log"
@@ -22,7 +21,7 @@ var (
 	tplFiles embed.FS
 
 	templates *template.Template
-	pages = make( map[string]*template.Template)
+	pages     = make(map[string]*template.Template)
 )
 
 type UserAlert struct {
@@ -33,15 +32,13 @@ type UserAlert struct {
 type Renderer interface {
 	TemplateName() string
 	Render(w io.Writer) error
-	register(r Renderer)
 }
 
 func Render(r Renderer, w io.Writer) error {
-	r.register(r) //let it know about itself
 	t := pages[r.TemplateName()]
-	if t == nil{
+	if t == nil {
 		t = template.Must(template.Must(template.Must(GetTemplates().Clone()).
-						  Parse("{{define \"content\"}} {{template \"" + r.TemplateName() + "\" .}} {{end}}")).ParseFS(tplFiles, r.TemplateName()))
+			Parse("{{define \"content\"}} {{template \""+r.TemplateName()+"\" .}} {{end}}")).ParseFS(tplFiles, r.TemplateName()))
 	}
 	if err := t.ExecuteTemplate(w, "index.html", r); err != nil {
 		return err
@@ -52,7 +49,6 @@ func Render(r Renderer, w io.Writer) error {
 
 type CommonFields struct {
 	Renderer
-	BaseMethods
 	//Request *http.Request
 	LoggedIn bool
 	Path     []string
@@ -60,14 +56,13 @@ type CommonFields struct {
 	Alert    *UserAlert
 }
 
-func (c CommonFields)Page()string{
+func (c CommonFields) Page() string {
 	return strings.Split(c.Renderer.TemplateName(), ".")[0]
 }
 
-func (c CommonFields) Title() string{
+func (c CommonFields) Title() string {
 	return strings.ToTitle(c.Page())
 }
-
 
 type BaseMethods struct {
 	templateName func(Renderer) string
@@ -77,8 +72,7 @@ type BaseMethods struct {
 var defaultMethods = BaseMethods{
 	func(r Renderer) string {
 		return TemplateName(r)
-	}, func(r Renderer, w io.Writer) error{
-		r.register(r)
+	}, func(r Renderer, w io.Writer) error {
 		return Render(r, w)
 	}}
 
@@ -94,18 +88,17 @@ func (r *BaseRenderer) TemplateName() string {
 	return r.templateName(r.CommonFields.Renderer)
 }
 
-func (r *BaseRenderer) Render(w io.Writer) error{
+func (r *BaseRenderer) Render(w io.Writer) error {
 	if r.render == nil {
 		r.render = defaultMethods.render
 	}
 	return r.render(r.CommonFields.Renderer, w)
 }
 
-
-func (r *BaseRenderer)register(self Renderer){
+func (r *BaseRenderer) Register(self Renderer) Renderer {
 	r.CommonFields.Renderer = self
+	return self
 }
-
 
 func TemplateName(r Renderer) string {
 	switch (r).(type) {
@@ -146,9 +139,9 @@ type FriendsHtml struct {
 
 type LoginHtml struct {
 	BaseRenderer
-	LoginAttempted bool
+	LoginAttempted  bool
 	LoginSuccessful bool
-	LoginData *data.LoginData
+	LoginData       *data.LoginData
 }
 
 type AboutHtml struct {
@@ -158,7 +151,7 @@ type AboutHtml struct {
 type SignupHtml struct {
 	BaseRenderer
 	LoginData *data.LoginData
-	Email string
+	Email     string
 }
 
 type DashboardHtml struct {
@@ -183,7 +176,7 @@ type UserHtml struct {
 }
 
 func LoadTemplates() {
-	
+
 	templates = template.Must(template.New("").ParseFS(tplFiles, "layout/*"))
 	templates = template.Must(templates.ParseFS(tplFiles, "assets/*"))
 
@@ -197,6 +190,3 @@ func GetTemplates() *template.Template {
 	}
 	return templates
 }
-
-
-
