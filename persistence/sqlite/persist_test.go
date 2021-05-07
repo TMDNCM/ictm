@@ -2,14 +2,12 @@ package sqlite
 
 import (
 	"github.com/TMDNCM/ictm/data"
-	"os"
 	"testing"
 	"time"
 )
 
 func TestAuth(t *testing.T) {
-	os.Remove("/tmp/proto.db")
-	p := NewPersistor("/tmp/proto.db")
+	p := NewPersistor(t.TempDir()+"/proto.db")
 	p.InitDB()
 	ld := data.LoginData{Username: "test", Password: "456"}
 	u := p.Register(ld, "user@local")
