@@ -49,11 +49,20 @@ type BaseMethods struct {
 }
 
 func (b BaseMethods) Dict(elems ...interface{}) map[interface{}]interface{} {
+	// This turns all arguments into a map,
+	//  where key & val are all arguments as pairs of two,
+	//  as those cannot be directly created from within templates
 	m := make(map[interface{}]interface{})
 	for i := range elems[:len(elems)/2] {
 		m[elems[i*2]] = elems[i*2+1]
 	}
 	return m
+}
+
+func (b BaseMethods) List(elems ...interface{}) []interface{} {
+	// This turns all arguments into a slice,
+	//  as those cannot be directly created from within templates
+	return elems
 }
 
 var defaultMethods = BaseMethods{
