@@ -51,22 +51,61 @@ func baseRenderer(p persistence.Persistor, r *http.Request) template.BaseRendere
 	return b
 }
 
+func haveRequiredLogin(b template.BaseRenderer, w http.ResponseWriter) bool {
+	if !b.LoggedIn { // 403
+		forbidden(b, w)
+		return false
+	}
+	return true
+}
+
+func forbidden(b template.BaseRenderer, w http.ResponseWriter) {
+	w.WriteHeader(http.StatusForbidden)
+	t := &template.ForbiddenHtml{BaseRenderer: b}
+	t.Register(t)
+	t.Render(w)
+}
+
+func notFound(b template.BaseRenderer, w http.ResponseWriter) {
+	w.WriteHeader(http.StatusNotFound)
+	t := &template.NotFoundHtml{BaseRenderer: b}
+	t.Register(t)
+	t.Render(w)
+}
+
 func makeServeMux(p persistence.Persistor) *http.ServeMux {
 	m := http.NewServeMux()
 
 	m.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		b := baseRenderer(p, r)
 		if r.URL.Path == "/" {
-			b := baseRenderer(p, r)
-			t := &template.DashboardHtml{BaseRenderer: b}
-			t.Register(t)
-			t.Render(w)
-		} else {
-			http.NotFound(w, r)
+			if b.LoggedIn {
+				http.Redirect(w, r, "/dashboard", http.StatusSeeOther) // redirect to dashboard
+			} else {
+				http.Redirect(w, r, "/signup", http.StatusSeeOther) // redirect to signup
+			}
+		} else { // 404
+			notFound(b, w)
 		}
+	})
+
+	m.HandleFunc("/dashboard", func(w http.ResponseWriter, r *http.Request) {
+		b := baseRenderer(p, r)
+		if !haveRequiredLogin(b, w) {
+			return
+		}
+
+		t := &template.DashboardHtml{BaseRenderer: b}
+		t.Register(t)
+		t.Render(w)
 	})
 
 	m.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
 		b := baseRenderer(p, r)
+		if !haveRequiredLogin(b, w) {
+			return
+		}
+
 		if len(b.Path) == 2 {
 			user := p.GetUser(b.Path[1]).Get()
 			if user != nil {
@@ -74,19 +113,23 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 				t.Register(t)
 				t.Render(w)
 			} else {
-				http.NotFound(w, r)
+				notFound(b, w)
 			}
 		} else if len(b.Path) == 1 {
 			t := &template.UserHtml{BaseRenderer: b, Userpage: b.User}
 			t.Register(t)
 			t.Render(w)
 		} else {
-			http.NotFound(w, r)
+			notFound(b, w)
 		}
 	})
 
 	m.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
 		b := baseRenderer(p, r)
+		if !haveRequiredLogin(b, w) {
+			return
+		}
+
 		entries := p.GetUser(b.User.Username).History()
 		if r.FormValue("after") != "" {
 			if timestamp, err := strconv.ParseInt(r.FormValue("after"), 10, 64); err == nil {
@@ -118,6 +161,10 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 
 	m.HandleFunc("/friends", func(w http.ResponseWriter, r *http.Request) {
 		b := baseRenderer(p, r)
+		if !haveRequiredLogin(b, w) {
+			return
+		}
+
 		friends := make([]data.User, 0, len(p.GetUser(b.User.Username).Friends()))
 		for _, v := range p.GetUser(b.User.Username).Friends() {
 			friends = append(friends, *(v.Get()))
