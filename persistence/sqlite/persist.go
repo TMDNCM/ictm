@@ -31,7 +31,7 @@ const (
 	getHistoryQuery         = "SELECT entryid FROM logentry WHERE user = ?"
 	logDoseQuery            = "INSERT INTO logentry(user, substance, route, amount, unit, taken) VALUES(?,?,?,?,?,?)"
 	addFriendQuery          = "INSERT INTO friends_t (user1, user2) VALUES(?,?)"
-	confirmFrienydQuery     = "UPDATE friends_t SET comfirmed=1 WHERE user2=? AND user1=?"
+	confirmFriendQuery      = "UPDATE friends_t SET comfirmed=1 WHERE user2=? AND user1=?"
 	doseSetWhenQuery        = "UPDATE logentry SET taken = ? WHERE entryid=?"
 	doseSetAmountQuery      = "UPDATE logentry set amount = ? WHERE entryid=?"
 	doseSetSubstanceQuery   = "UPDATE logentry SET substance = ? WHERE entryid = ?"
@@ -372,7 +372,7 @@ func (u *User) ConfirmFriend(friend persistence.User) persistence.User {
 	f := friend.(*User)
 	if u.confirmFriendStmt == nil {
 		var err error
-		if u.addFriendStmt, err = u.db.Prepare(confirmFrienydQuery); err != nil {
+		if u.addFriendStmt, err = u.db.Prepare(confirmFriendQuery); err != nil {
 			log.Fatal(err)
 		}
 	}
