@@ -151,7 +151,7 @@ type FriendsHtml struct {
 
 type LoginHtml struct {
 	BaseRenderer
-	LoginAttempted  bool
+	LoginAttemptedAs string
 }
 
 type AboutHtml struct {

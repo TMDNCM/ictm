@@ -4,11 +4,11 @@
 		<fieldset>
 			<span>
 				<label for="login-username">Username</label>
-				<input id="login-username" name="username" type="text" placeholder="someonespecial">
+				<input id="login-username" name="username" type="text" placeholder="someonespecial" value="{{- .LoginAttemptedAs -}}" {{- if not .LoginAttemptedAs }} autofocus {{- end -}}>
 			</span>
 			<span>
 				<label for="login-password">Password</label>
-				<input id="login-password" name="password" type="password" placeholder="*******">
+				<input id="login-password" name="password" type="password" placeholder="*******" {{- if .LoginAttemptedAs }} autofocus {{- end -}}>
 			</span>
 		</fieldset>
 		<input type="submit" value="Go">

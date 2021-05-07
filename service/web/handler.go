@@ -189,7 +189,7 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 					Expires: sessionData.Expiry, SameSite: http.SameSiteStrictMode})
 				http.Redirect(w, r, "/", http.StatusSeeOther) // redirect to front page
 			} else { //unsuccessful login
-				t := &template.LoginHtml{BaseRenderer: b, LoginAttempted: true}
+				t := &template.LoginHtml{BaseRenderer: b, LoginAttemptedAs: ld.Username}
 				t.Register(t)
 				t.Render(w)
 			}
