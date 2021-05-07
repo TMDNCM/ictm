@@ -48,23 +48,6 @@ type BaseMethods struct {
 	render       func(Renderer, io.Writer) error
 }
 
-func (b BaseMethods) Dict(elems ...interface{}) map[interface{}]interface{} {
-	// This turns all arguments into a map,
-	//  where key & val are all arguments as pairs of two,
-	//  as those cannot be directly created from within templates
-	m := make(map[interface{}]interface{})
-	for i := range elems[:len(elems)/2] {
-		m[elems[i*2]] = elems[i*2+1]
-	}
-	return m
-}
-
-func (b BaseMethods) List(elems ...interface{}) []interface{} {
-	// This turns all arguments into a slice,
-	//  as those cannot be directly created from within templates
-	return elems
-}
-
 var defaultMethods = BaseMethods{
 	TemplateName,
 	Render,
@@ -180,12 +163,28 @@ type UserHtml struct {
 }
 
 func LoadTemplates() {
+	funcMap := template.FuncMap{
+		"dict": func(elems ...interface{}) map[interface{}]interface{} {
+			// This turns all arguments into a map,
+			//  where key & val are all arguments as pairs of two,
+			//  as those cannot be directly created from within templates
+			m := make(map[interface{}]interface{})
+			for i := range elems[:len(elems)/2] {
+				m[elems[i*2]] = elems[i*2+1]
+			}
+			return m
+		},
+		"list": func(elems ...interface{}) []interface{} {
+			// This turns all arguments into a slice,
+			//  as those cannot be directly created from within templates
+			return elems
+		},
+	}
 
-	templates = template.Must(template.New("").ParseFS(tplFiles, "layout/*"))
+	templates = template.Must(template.New("").Funcs(funcMap).ParseFS(tplFiles, "layout/*"))
 	templates = template.Must(templates.ParseFS(tplFiles, "assets/*"))
 
 	log.Println(GetTemplates())
-
 }
 
 func GetTemplates() *template.Template {

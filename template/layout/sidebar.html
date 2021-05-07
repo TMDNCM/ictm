@@ -1,18 +1,18 @@
 {{- $current := index .Path 0 -}}
 {{- $login := printf "%t" .LoggedIn -}}
 <ul>{{/*fields:	auth?	link/spacer		boxicon				bubble */}}
-	{{- range .List
-		(.List	"true"	"dashboard"		"bx-home"			"")
-		(.List	"true"	"profile"		"bx-user"			"")
-		(.List	"true"	"notifications"	"bx-bell"			"1")
-		(.List	"true"	"log"			"bx-list-ul"		"3")
-		(.List	"true"	"friends"		"bxs-user-account"	"7")
-		(.List	"true"	"stock"			"bx-cabinet"		"!")
-		(.List	""		"about"			"bx-question-mark"	"")
-		(.List	""		"")
-		(.List	"true"	"logout"		"bx-log-out"		"")
-		(.List	"false"	"signup"		"bx-user-plus"		"")
-		(.List	"false"	"login"			"bx-log-in"			"")
+	{{- range list
+		(list	"true"	"dashboard"		"bx-home"			"")
+		(list	"true"	"profile"		"bx-user"			"")
+		(list	"true"	"notifications"	"bx-bell"			"1")
+		(list	"true"	"log"			"bx-list-ul"		"3")
+		(list	"true"	"friends"		"bxs-user-account"	"7")
+		(list	"true"	"stock"			"bx-cabinet"		"!")
+		(list	""		"about"			"bx-question-mark"	"")
+		(list	""		"")
+		(list	"true"	"logout"		"bx-log-out"		"")
+		(list	"false"	"signup"		"bx-user-plus"		"")
+		(list	"false"	"login"			"bx-log-in"			"")
 	-}}
 		{{- if eq (index . 0) "" $login -}}
 			{{- if eq (index . 1) "" -}}
