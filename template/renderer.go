@@ -140,8 +140,6 @@ type FriendsHtml struct {
 type LoginHtml struct {
 	BaseRenderer
 	LoginAttempted  bool
-	LoginSuccessful bool
-	LoginData       *data.LoginData
 }
 
 type AboutHtml struct {
