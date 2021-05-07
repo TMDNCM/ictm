@@ -369,11 +369,24 @@ form span > input[type=checkbox]:checked ~ input[type=submit] {
 	display: revert;
 }
 
+dialog[open] + dialog[open] {
+	visibility: hidden;
+	opacity: 0;
+}
+dialog[open] {
+	transition: visibility 1s, opacity 1s;
+	visibility: visible;
+	opacity: 1;
+}
 dialog {
+	transition: visibility 500ms, opacity 500ms;
+	visibility: hidden;
+	opacity: 0;
 	position: fixed;
 	bottom: 0;
 	margin: 1.5rem;
-	padding: 1.5rem;
+	/*padding: 1.5rem;*/
+	padding: 0px;
 	margin-left: auto;
 	border-top-left-radius: .25rem;
 	border-top-right-radius: .25rem;

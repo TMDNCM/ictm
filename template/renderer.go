@@ -1,19 +1,13 @@
 package template
 
 import (
-	//"net/http"
 	"embed"
 	"fmt"
 	"github.com/TMDNCM/ictm/data"
-	//"github.com/TMDNCM/ictm/persistence"
-	_ "github.com/dustin/go-humanize"
 	"html/template"
 	"io"
 	"log"
-	_ "os"
-	_ "path"
 	"strings"
-	_ "time"
 )
 
 var (
@@ -23,11 +17,6 @@ var (
 	templates *template.Template
 	pages     = make(map[string]*template.Template)
 )
-
-type UserAlert struct {
-	Title   string
-	Message string
-}
 
 type Renderer interface {
 	TemplateName() string
@@ -53,7 +42,6 @@ type CommonFields struct {
 	LoggedIn bool
 	Path     []string
 	User     *data.User
-	Alert    *UserAlert
 }
 
 func (c CommonFields) Page() string {
@@ -69,12 +57,18 @@ type BaseMethods struct {
 	render       func(Renderer, io.Writer) error
 }
 
+func (b BaseMethods) Dict(elems ...interface{}) map[interface{}]interface{} {
+	m := make(map[interface{}]interface{})
+	for i := range elems[:len(elems)/2] {
+		m[elems[i*2]] = elems[i*2+1]
+	}
+	return m
+}
+
 var defaultMethods = BaseMethods{
-	func(r Renderer) string {
-		return TemplateName(r)
-	}, func(r Renderer, w io.Writer) error {
-		return Render(r, w)
-	}}
+	TemplateName,
+	Render,
+}
 
 type BaseRenderer struct {
 	CommonFields

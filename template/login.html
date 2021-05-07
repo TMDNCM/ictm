@@ -21,3 +21,6 @@
 		</div>
 	</form>
 </div>
+{{- if .LoginAttemptedAs -}}
+{{- template "alert.html" (.Dict "title" "Hold on" "message" "Incorrect login details") -}}
+{{- end -}}

@@ -1,9 +1,9 @@
 <dialog open>
 	<section>
-		<p>{{- .Alert.Title -}}</p>
+		<p>{{- index . "title" -}}</p>
 		<form method="dialog">
 			<input type="submit" value="x">
 		</form>
 	</section>
-	<span>{{- .Alert.Message -}}</span>
+	<span>{{- index . "message" -}}</span>
 </dialog>
