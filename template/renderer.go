@@ -102,6 +102,10 @@ func (r *BaseRenderer) Register(self Renderer) Renderer {
 
 func TemplateName(r Renderer) string {
 	switch (r).(type) {
+	case *NotFoundHtml:
+		return "404.html"
+	case *ForbiddenHtml:
+		return "403.html"
 	case *LogHtml:
 		return "log.html"
 	case *FriendsHtml:
@@ -125,6 +129,14 @@ func TemplateName(r Renderer) string {
 	default:
 		return fmt.Sprintf("type is %T", r)
 	}
+}
+
+type NotFoundHtml struct {
+	BaseRenderer
+}
+
+type ForbiddenHtml struct {
+	BaseRenderer
 }
 
 type LogHtml struct {
