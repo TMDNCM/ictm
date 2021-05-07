@@ -11,21 +11,7 @@ import (
 	"time"
 )
 
-var pageVisibility = map[string]string{
-	"about":         "public",
-	"signup":        "public",
-	"login":         "public",
-	"dashboard":     "private",
-	"profile":       "private",
-	"notifications": "private",
-	"log":           "private",
-	"friends":       "private",
-	"stock":         "private",
-	"user":          "private",
-}
-
 type WebHandler struct {
-	pageVisibility map[string]string
 	persistor      persistence.Persistor
 	mux            *http.ServeMux
 }
