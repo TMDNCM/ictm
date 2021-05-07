@@ -9,5 +9,6 @@ type Dose struct {
 	Substance string
 	Route     string
 	Amount    int
+	Unit string
 	Taken     time.Time
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/TMDNCM/ictm/data"
 	"github.com/TMDNCM/ictm/persistence"
 	"github.com/TMDNCM/ictm/template"
-	//"log"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -29,7 +29,9 @@ func baseRenderer(p persistence.Persistor, r *http.Request) template.BaseRendere
 	cookie, err := r.Cookie("token")
 	if err == nil { //login cookie
 		if session = p.GetSession(cookie.Value);session!=nil&& session.Valid() {
+			log.Println("valid session")
 			b.User = session.User().Get()
+			log.Printf("%+#v\n",b.User)
 			b.LoggedIn = true
 		}
 	}
@@ -103,11 +105,14 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 
 	m.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
 		b := baseRenderer(p, r)
+		/*
 		if !haveRequiredLogin(b, w) {
 			return
 		}
+		*/
 
-		entries := p.GetUser(b.User.Username).History()
+		user := p.GetUser(b.User.Username)
+		entries:= user.History()
 		if r.FormValue("after") != "" {
 			if timestamp, err := strconv.ParseInt(r.FormValue("after"), 10, 64); err == nil {
 				entries = entries.After(time.Unix(timestamp, 0))

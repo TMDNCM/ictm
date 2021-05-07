@@ -36,7 +36,7 @@ const (
 	doseSetAmountQuery      = "UPDATE logentry set amount = ? WHERE entryid=?"
 	doseSetSubstanceQuery   = "UPDATE logentry SET substance = ? WHERE entryid = ?"
 	doseSetRouteQuery       = "UPDATE logentry SET route = ? WHERE entryid = ?"
-	getDoseQuery            = "SELECT user, substance, route, amount, taken FROM logentry WHERE entryid=?"
+	getDoseQuery            = "SELECT user, substance, route, amount, unit, taken FROM logentry WHERE entryid=?"
 )
 
 //go:embed proto.sql
@@ -136,7 +136,7 @@ func (p *SQLitePersist) Authenticate(ld data.LoginData) persistence.Session {
 
 	rs, err := p.sessionCreateStmt.Exec(ld.Username, salt, ld.Hash(salt))
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	var rowid int64
 	if rowid, err = rs.LastInsertId(); err != nil {
@@ -206,7 +206,10 @@ func (p *SQLitePersist) GetSession(token string) persistence.Session {
 		log.Println(err)
 		return nil
 	}
-	return &Session{p, sessionId}
+	
+	s :=&Session{SQLitePersist:p, sessionid:sessionId}
+	log.Printf("%#+v\n", s)
+	return s
 }
 
 func (p *SQLitePersist) GetUser(username string) persistence.User {
@@ -221,6 +224,7 @@ func (p *SQLitePersist) GetUser(username string) persistence.User {
 		log.Println(err)
 		return nil
 	}
+	log.Printf("%#+v\n",userId)
 	return &User{p, userId}
 }
 
@@ -488,6 +492,7 @@ func (d *Doses) Get() []persistence.Dose {
 		}
 		doses = append(doses, dose)
 	}
+	log.Printf("%#+v",doses)
 	return doses
 }
 
@@ -562,11 +567,12 @@ func (d *Dose) Get() *data.Dose {
 	var timestamp int64
 	var dose data.Dose
 
-	if err := d.getDoseStmt.QueryRow(d.doseid).Scan(&userid, &(dose.Substance), &(dose.Route), &(dose.Amount), &timestamp); err != nil {
+	if err := d.getDoseStmt.QueryRow(d.doseid).Scan(&userid, &(dose.Substance), &(dose.Route), &(dose.Amount),&(dose.Unit), &timestamp); err != nil {
 		log.Println(err)
 		return nil
 	}
 	dose.User = (&User{SQLitePersist: d.SQLitePersist, userid: userid}).Get()
 	dose.Taken = time.Unix(timestamp, 0)
+	log.Printf("%#+v",dose)
 	return &dose
 }
