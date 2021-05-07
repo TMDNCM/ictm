@@ -117,7 +117,8 @@ func (p *SQLitePersist) getSalt(username string) (salt []byte) {
 		}
 	}
 	if err := p.saltFetchStmt.QueryRow(username).Scan(&salt); err != nil {
-		log.Fatal(err)
+		log.Print(err)
+		return nil
 	}
 	return
 }
@@ -139,7 +140,8 @@ func (p *SQLitePersist) Authenticate(ld data.LoginData) persistence.Session {
 	}
 	var rowid int64
 	if rowid, err = rs.LastInsertId(); err != nil {
-		log.Fatal(err)
+		log.Print(err)
+		return nil
 	}
 	return &Session{p, uint64(rowid)}
 	/*
@@ -148,7 +150,8 @@ func (p *SQLitePersist) Authenticate(ld data.LoginData) persistence.Session {
 
 
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			return nil
 		}
 		tx.Commit()
 		return &session
@@ -161,12 +164,13 @@ func (p *SQLitePersist) Register(ld data.LoginData, email string) persistence.Us
 	salt := make([]byte, 36)
 	_, err := rand.Read(salt)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	hash := ld.Hash(salt)
-	tx, err := p.db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	if p.userRegisterStmt == nil {
 		p.userRegisterStmt, err = p.db.Prepare(userRegisterQuery)
@@ -174,18 +178,19 @@ func (p *SQLitePersist) Register(ld data.LoginData, email string) persistence.Us
 			log.Fatal(err)
 		}
 	}
-	rs, err := tx.Stmt(p.userRegisterStmt).Exec(ld.Username, email, salt, hash)
+	rs, err := p.userRegisterStmt.Exec(ld.Username, email, salt, hash)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	rowid, err := rs.LastInsertId()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 
 	/*
 	 */
-	tx.Commit()
 	return &User{p, uint64(rowid)}
 }
 
@@ -198,7 +203,8 @@ func (p *SQLitePersist) GetSession(token string) persistence.Session {
 	}
 	var sessionId uint64
 	if err := p.sessionIdFromTokenStmt.QueryRow(token).Scan(&sessionId); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return &Session{p, sessionId}
 }
@@ -212,7 +218,8 @@ func (p *SQLitePersist) GetUser(username string) persistence.User {
 	}
 	var userId uint64
 	if err := p.userIdFromNameStmt.QueryRow(username).Scan(&userId); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return &User{p, userId}
 }
@@ -235,7 +242,8 @@ func (s *Session) Get() *data.Session {
 		&(sessiondata.User.Displayname), &(sessiondata.User.Email), &(sessiondata.Token),
 		&lastActive, &expires)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	sessiondata.LastActive = time.Unix(lastActive, 0)
 	sessiondata.Expiry = time.Unix(expires, 0)
@@ -271,12 +279,12 @@ func (s *Session) Invalidate() {
 	if s.sessionInvalidateStmt == nil {
 		var err error
 		if s.sessionInvalidateStmt, err = s.db.Prepare(sessionInvalidateQuery); err != nil {
-			log.Fatal(err)
+			log.Fatal(err) 
 		}
 	}
 
 	if _, err := s.sessionInvalidateStmt.Exec(s.sessionid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }
 
@@ -291,7 +299,8 @@ func (u *User) Get() *data.User {
 	var user data.User
 	err := u.userFromIdStmt.QueryRow(u.userid).Scan(&(user.Username), &(user.Displayname), &(user.Email))
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 
 	return &user
@@ -305,7 +314,8 @@ func (u *User) SetUsername(username string) persistence.User {
 		}
 	}
 	if _, err := u.setUsernameStmt.Exec(username, u.userid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return u
 }
@@ -318,7 +328,8 @@ func (u *User) SetEmail(email string) persistence.User {
 		}
 	}
 	if _, err := u.setEmailStmt.Exec(email, u.userid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return u
 }
@@ -331,7 +342,8 @@ func (u *User) SetDisplayname(displayname string) persistence.User {
 		}
 	}
 	if _, err := u.setDisplaynameStmt.Exec(displayname, u.userid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return u
 }
@@ -348,7 +360,8 @@ func (u *User) SetPassword(password string) persistence.User {
 	ld := &data.LoginData{username, password}
 
 	if _, err := u.setHashStmt.Exec(ld.Hash(salt), u.userid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return u
 }
@@ -363,7 +376,8 @@ func (u *User) AddFriend(friend persistence.User) persistence.User {
 	}
 
 	if _, err := u.addFriendStmt.Exec(u.userid, f.userid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return u
 }
@@ -377,7 +391,8 @@ func (u *User) ConfirmFriend(friend persistence.User) persistence.User {
 		}
 	}
 	if _, err := u.confirmFriendStmt.Exec(u.userid, f.userid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return u
 }
@@ -393,14 +408,16 @@ func (u *User) Friends() []persistence.User {
 	var rows *sql.Rows
 	var err error
 	if rows, err = u.getFriendsStmt.Query(u.userid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	defer rows.Close()
 	for rows.Next() {
 		friend := new(User)
 		friend.SQLitePersist = u.SQLitePersist
 		if err := rows.Scan(&((*friend).userid)); err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			return nil
 		}
 		friends = append(friends, friend)
 	}
@@ -416,7 +433,8 @@ func (u *User) Log(substance, route string, dose int, unit string, time time.Tim
 	}
 
 	if _, err := u.logDoseStmt.Exec(u.userid, substance, route, dose, unit, time.Unix()); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return 
 	}
 }
 
@@ -456,7 +474,8 @@ func (d *Doses) Get() []persistence.Dose {
 	var rows *sql.Rows
 	var err error
 	if rows, err = d.db.Query(d.query, d.args...); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	defer rows.Close()
 	doses := make([]persistence.Dose, 0)
@@ -464,7 +483,8 @@ func (d *Doses) Get() []persistence.Dose {
 		dose := new(Dose)
 		dose.SQLitePersist = d.SQLitePersist
 		if err = rows.Scan(&(dose.doseid)); err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			return nil
 		}
 		doses = append(doses, dose)
 	}
@@ -479,7 +499,8 @@ func (d *Dose) SetWhen(t time.Time) persistence.Dose {
 		}
 	}
 	if _, err := d.doseSetWhenStmt.Exec(t.Unix(), d.doseid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return d
 }
@@ -493,7 +514,8 @@ func (d *Dose) SetAmount(amount int) persistence.Dose {
 	}
 
 	if _, err := d.doseSetAmountStmt.Exec(amount, d.doseid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return d
 }
@@ -507,7 +529,8 @@ func (d *Dose) SetSubstance(substance string) persistence.Dose {
 	}
 
 	if _, err := d.doseSetSubstanceStmt.Exec(substance, d.doseid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return d
 }
@@ -521,7 +544,8 @@ func (d *Dose) SetRoute(route string) persistence.Dose {
 	}
 
 	if _, err := d.doseSetRouteStmt.Exec(route, d.doseid); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return d
 }
@@ -539,7 +563,8 @@ func (d *Dose) Get() *data.Dose {
 	var dose data.Dose
 
 	if err := d.getDoseStmt.QueryRow(d.doseid).Scan(&userid, &(dose.Substance), &(dose.Route), &(dose.Amount), &timestamp); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	dose.User = (&User{SQLitePersist: d.SQLitePersist, userid: userid}).Get()
 	dose.Taken = time.Unix(timestamp, 0)

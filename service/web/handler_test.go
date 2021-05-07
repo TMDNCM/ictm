@@ -5,9 +5,11 @@ import (
 	"github.com/TMDNCM/ictm/data"
 	"net/http"
 	"testing"
+	"log"
 )
 
 func TestWeb(t *testing.T) {
+	log.SetFlags(log.LstdFlags|log.Lshortfile)
 
 	testdir := t.TempDir()
 

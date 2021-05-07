@@ -42,7 +42,7 @@ func baseRenderer(p persistence.Persistor, r *http.Request) template.BaseRendere
 	var session persistence.Session
 	cookie, err := r.Cookie("token")
 	if err == nil { //login cookie
-		if session = p.GetSession(cookie.Value); session.Valid() {
+		if session = p.GetSession(cookie.Value);session!=nil&& session.Valid() {
 			b.User = session.User().Get()
 			b.LoggedIn = true
 		}
@@ -82,7 +82,7 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 			if b.LoggedIn {
 				http.Redirect(w, r, "/dashboard", http.StatusSeeOther) // redirect to dashboard
 			} else {
-				http.Redirect(w, r, "/signup", http.StatusSeeOther) // redirect to signup
+				http.Redirect(w, r, "/login", http.StatusSeeOther) // redirect to signup
 			}
 		} else { // 404
 			notFound(b, w)
