@@ -4,7 +4,11 @@
 		<fieldset>
 			<span>
 				<label for="signup-username">Username</label>
-				<input id="signup-username" name="username" type="text" placeholder="someonespecial">
+				<input id="signup-username" name="username" type="text" placeholder="someonespecial" autofocus>
+			</span>
+			<span>
+				<label for="signup-email">E-Mail</label>
+				<input id="signup-email" name="email" type="email" placeholder="someone@example.com">
 			</span>
 			<span>
 				<label for="signup-password">Password</label>
@@ -21,3 +25,6 @@
 		</div>
 	</form>
 </div>
+{{- if .SignupAttempt -}}
+{{- template "alert.html" (dict "title" "Something's wrong" "message" .SignupAttempt) -}}
+{{- end -}}

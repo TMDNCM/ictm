@@ -86,28 +86,19 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 		t.Render(w)
 	})
 
-	m.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
+	m.HandleFunc("/friends", func(w http.ResponseWriter, r *http.Request) {
 		b := baseRenderer(p, r)
 		if !haveRequiredLogin(b, w) {
 			return
 		}
 
-		if len(b.Path) == 2 {
-			user := p.GetUser(b.Path[1]).Get()
-			if user != nil {
-				t := &template.UserHtml{BaseRenderer: b, Userpage: user}
-				t.Register(t)
-				t.Render(w)
-			} else {
-				notFound(b, w)
-			}
-		} else if len(b.Path) == 1 {
-			t := &template.UserHtml{BaseRenderer: b, Userpage: b.User}
-			t.Register(t)
-			t.Render(w)
-		} else {
-			notFound(b, w)
+		friends := make([]data.User, 0, len(p.GetUser(b.User.Username).Friends()))
+		for _, v := range p.GetUser(b.User.Username).Friends() {
+			friends = append(friends, *(v.Get()))
 		}
+		t := &template.FriendsHtml{BaseRenderer: b, Friends: friends}
+		t.Register(t)
+		t.Render(w)
 	})
 
 	m.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
@@ -145,21 +136,6 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 		t.Render(w)
 	})
 
-	m.HandleFunc("/friends", func(w http.ResponseWriter, r *http.Request) {
-		b := baseRenderer(p, r)
-		if !haveRequiredLogin(b, w) {
-			return
-		}
-
-		friends := make([]data.User, 0, len(p.GetUser(b.User.Username).Friends()))
-		for _, v := range p.GetUser(b.User.Username).Friends() {
-			friends = append(friends, *(v.Get()))
-		}
-		t := &template.FriendsHtml{BaseRenderer: b, Friends: friends}
-		t.Register(t)
-		t.Render(w)
-	})
-
 	m.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		b := baseRenderer(p, r)
 		var ld *data.LoginData
@@ -183,6 +159,84 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 			t := &template.LoginHtml{BaseRenderer: b}
 			t.Register(t)
 			t.Render(w)
+		}
+	})
+
+	m.HandleFunc("/profile", func(w http.ResponseWriter, r *http.Request) {
+		b := baseRenderer(p, r)
+		if !haveRequiredLogin(b, w) {
+			return
+		}
+
+		t := &template.ProfileHtml{BaseRenderer: b}
+		t.Register(t)
+		t.Render(w)
+	})
+
+	m.HandleFunc("/signup", func(w http.ResponseWriter, r *http.Request) {
+		b := baseRenderer(p, r)
+		if r.FormValue("password") != r.FormValue("password-again") {
+			t := &template.SignupHtml{BaseRenderer: b, SignupAttempt: "Your passwords do not match"}
+			t.Register(t)
+			t.Render(w)
+		} else if r.FormValue("username") != "" && r.FormValue("email") != "" && r.FormValue("password") != "" {
+			if p.GetUser(r.FormValue("username")) != nil { // username already exists
+				t := &template.SignupHtml{BaseRenderer: b, SignupAttempt: "Username already taken"}
+				t.Register(t)
+				t.Render(w)
+			} else { // username available
+				var ld *data.LoginData
+				ld = new(data.LoginData)
+				ld.Username = r.FormValue("username")
+				ld.Password = r.FormValue("password")
+				// persist the registration
+				if p.Register(*ld, r.FormValue("email")) == nil {
+					t := &template.SignupHtml{BaseRenderer: b, SignupAttempt: "An error occurred while trying to sign up"}
+					t.Register(t)
+					t.Render(w)
+				} else { // registration done, attempt to log in
+					sess := p.Authenticate(*ld)
+					if sess.Valid() { //successful
+						sessionData := sess.Get()
+						b.User = sessionData.User
+						http.SetCookie(w, &http.Cookie{Name: "token", Value: sessionData.Token,
+							Expires: sessionData.Expiry, SameSite: http.SameSiteStrictMode})
+						http.Redirect(w, r, "/", http.StatusSeeOther) // redirect to front page
+					} else { //unsuccessful
+						t := &template.LoginHtml{BaseRenderer: b, LoginAttemptedAs: ld.Username}
+						t.Register(t)
+						t.Render(w)
+					}
+				}
+			}
+		} else { //no signup attempted
+			t := &template.SignupHtml{BaseRenderer: b}
+			t.Register(t)
+			t.Render(w)
+		}
+	})
+
+	m.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
+		b := baseRenderer(p, r)
+		if !haveRequiredLogin(b, w) {
+			return
+		}
+
+		if len(b.Path) == 2 {
+			user := p.GetUser(b.Path[1]).Get()
+			if user != nil {
+				t := &template.UserHtml{BaseRenderer: b, Userpage: user}
+				t.Register(t)
+				t.Render(w)
+			} else {
+				notFound(b, w)
+			}
+		} else if len(b.Path) == 1 {
+			t := &template.UserHtml{BaseRenderer: b, Userpage: b.User}
+			t.Register(t)
+			t.Render(w)
+		} else {
+			notFound(b, w)
 		}
 	})
 

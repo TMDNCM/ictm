@@ -137,8 +137,7 @@ type AboutHtml struct {
 
 type SignupHtml struct {
 	BaseRenderer
-	LoginData *data.LoginData
-	Email     string
+	SignupAttempt string
 }
 
 type DashboardHtml struct {

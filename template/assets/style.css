@@ -410,6 +410,7 @@ dialog > section > p {
 	font-family: var(--font-mono);
 	font-weight: 700;
 	color: rgb(var(--color-red-500));
+	margin-right: 2rem;
 }
 dialog > section > form {
 	margin-left: auto;
