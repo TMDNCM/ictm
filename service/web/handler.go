@@ -140,12 +140,9 @@ func makeServeMux(p persistence.Persistor) *http.ServeMux {
 				b.User = sessionData.User
 				http.SetCookie(w, &http.Cookie{Name: "token", Value: sessionData.Token,
 					Expires: sessionData.Expiry, SameSite: http.SameSiteStrictMode})
-				t := &template.LoginHtml{BaseRenderer: b, LoginAttempted: true,
-					LoginSuccessful: true, LoginData: ld}
-				t.Register(t)
-				t.Render(w)
+				http.Redirect(w, r, "/", http.StatusSeeOther) // redirect to front page
 			} else { //unsuccessful login
-				t := &template.LoginHtml{BaseRenderer: b, LoginAttempted: true, LoginData: ld}
+				t := &template.LoginHtml{BaseRenderer: b, LoginAttempted: true}
 				t.Register(t)
 				t.Render(w)
 			}
