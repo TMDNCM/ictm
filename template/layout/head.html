@@ -6,5 +6,5 @@
 		{{- template "style.css" . -}}
 		{{- block  "pagecss" . -}}{{- end -}}
 		</style>
-	<title>Gallipot - {{.Page}}</title>
+	<title>Gallipot - {{index .Path 0}}</title>
 </head>

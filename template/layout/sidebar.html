@@ -1,11 +1,11 @@
-{{- $current := .Title -}}
+{{- $current := index .Path 0 -}}
 <ul>
 	{{if .LoggedIn}}
 	<li>
 		{{- with $elem := "dashboard" -}}
 			<a href="/{{- $elem -}}" {{if eq $current $elem -}} class="selected" {{- end}}>
 				<i class="bx bx-home"></i>
-				<span>{{-  $elem -}}</span>
+				<span>{{- $elem -}}</span>
 			</a>
 		{{- end -}}
 	</li>

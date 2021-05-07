@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"io"
 	"log"
-	"strings"
 )
 
 var (
@@ -42,14 +41,6 @@ type CommonFields struct {
 	LoggedIn bool
 	Path     []string
 	User     *data.User
-}
-
-func (c CommonFields) Page() string {
-	return strings.Split(c.Renderer.TemplateName(), ".")[0]
-}
-
-func (c CommonFields) Title() string {
-	return strings.ToTitle(c.Page())
 }
 
 type BaseMethods struct {
