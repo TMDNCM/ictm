@@ -16,7 +16,7 @@ const (
 	sessionCreateQuery = "INSERT INTO session (userid) " +
 		"SELECT userid FROM user WHERE username=? AND salt=? AND hash=?"
 	sessionFromIdQuery = "SELECT username, displayname, email, token, last_access, expires " +
-		"FROM user JOIN session WHERE session.sessionid=?"
+		"FROM user NATURAL JOIN session WHERE session.sessionid=?"
 	sessionIdFromTokenQuery = "SELECT sessionid FROM session WHERE token = ?"
 	sessionExpiryQuery      = "SELECT expires FROM session WHERE sessionid = ?"
 	sessionInvalidateQuery  = "DELETE FROM session WHERE sessionid=?"
@@ -213,6 +213,7 @@ func (p *SQLitePersist) GetSession(token string) persistence.Session {
 }
 
 func (p *SQLitePersist) GetUser(username string) persistence.User {
+	log.Println("seeking user",username)
 	if p.userIdFromNameStmt == nil {
 		var err error
 		if p.userIdFromNameStmt, err = p.db.Prepare(userIdFromNameQuery); err != nil {
@@ -224,7 +225,7 @@ func (p *SQLitePersist) GetUser(username string) persistence.User {
 		log.Println(err)
 		return nil
 	}
-	log.Printf("%#+v\n",userId)
+	log.Printf("returning user id: %#+v\n",userId)
 	return &User{p, userId}
 }
 
